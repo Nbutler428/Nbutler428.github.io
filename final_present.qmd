@@ -103,7 +103,7 @@ format:
 
 ---
 
-## 9-10. Cleaned Columns to be used (`instore,direct_to_consumer`)
+## Feature 9-10: Cleaned Columns to be used (`instore,direct_to_consumer`)
 
 
 
