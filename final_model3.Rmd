@@ -1,0 +1,94 @@
+---
+title: "final_model_3"
+author: "group9"
+date: "2025-04-21"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(caret)
+```
+
+
+```{r}
+fast <- readRDS(gzcon(url("https://github.com/cd-public/D505/raw/refs/heads/master/dat/craven_train.rds")))
+```
+
+
+```{r}
+fast <- fast %>%
+  mutate(
+    src_www = as.numeric(gsub("%", "", src_www))/100,
+    src_iphone = as.numeric(gsub("%", "", src_iphone))/100,
+    src_android = as.numeric(gsub("%", "", src_android))/100,
+    src_ipad = as.numeric(gsub("%", "", src_ipad))/100,
+    src_manual = as.numeric(gsub("%", "", src_manual))/100,
+    src_facebookshop = as.numeric(gsub("%", "", src_facebookshop))/100,
+    src_external = as.numeric(gsub("%", "", src_external))/100,
+    `src_Amazon FBM` = as.numeric(gsub("%", "", `src_Amazon FBM`))/100,
+    January = as.numeric(gsub("%", "", January))/100,
+    February = as.numeric(gsub("%", "", February))/100,
+    March = as.numeric(gsub("%", "", March))/100,
+    April = as.numeric(gsub("%", "", April))/100,
+    May = as.numeric(gsub("%", "", May))/100,
+    June = as.numeric(gsub("%", "", June))/100,
+    July = as.numeric(gsub("%", "", July))/100,
+    August = as.numeric(gsub("%", "", August))/100,
+    September = as.numeric(gsub("%", "", September))/100,
+    October = as.numeric(gsub("%", "", October))/100,
+    November = as.numeric(gsub("%", "", November))/100,
+    December = as.numeric(gsub("%", "", December))/100,
+    `pct_Direct Sales` = as.numeric(gsub("%", "", `pct_Direct Sales`))/100,
+    `pct_Orders for Stock` = as.numeric(gsub("%", "", `pct_Orders for Stock`))/100,
+    `pct_Drop Shipments` = as.numeric(gsub("%", "", `pct_Drop Shipments`))/100,
+    `pct_Moss Motors Only` = as.numeric(gsub("%", "", `pct_Moss Motors Only`))/100,
+    `pct_R&D Club` = as.numeric(gsub("%", "", `pct_R&D Club`))/100,
+    retailPrice = as.numeric(retailPrice),
+    `Unit Weight (pounds)` = as.numeric(`Unit Weight (pounds)`),
+    yearMin = as.numeric(yearMin),
+    yearMax = as.numeric(yearMax)
+  )
+```
+
+```{r}
+engineer <- function(data) {
+  data %>%
+    mutate(
+      online_sales = src_www * src_iphone * src_android * src_ipad,
+      profit_per_item = retailPrice - `BOM Cost`,
+      bompercomp = `BOM Cost`/(`Number of Components` + 0.00001),
+      total_cost = `Units Sold` * `BOM Cost`,
+      salenosale = ifelse(str_detect(`First Order (from sales data)`, "no sales"),1,0),
+      log_price = log(retailPrice),
+      winter_summer_ratio = (November + December + January + February) / 
+                           (May + June + July + August + 0.001),
+      material_premium = case_when(
+        `Main Component Material` %in% c("Carbon Fiber", "Aluminum", "Leather") ~ 2,
+        `Main Component Material` %in% c("Fiberglass", "Steel", "Metal") ~ 1,
+        TRUE ~ 0 
+      ),
+      direct_to_consumer = `pct_Direct Sales`,
+      instore = src_manual
+    ) %>%
+    select(online_sales, profit_per_item, bompercomp, total_cost,
+          salenosale, log_price, winter_summer_ratio,
+           material_premium, direct_to_consumer, instore)
+}
+```
+
+```{r}
+profit <- fast["Revenue 2019 to present"] - fast["BOM Cost"] * fast["Units Sold"]
+fast <- fast %>% engineer()
+fast <- fast |> select(1:10)
+fast["Profit"] = profit
+```
+
+```{r}
+train(Profit ~ .,
+      data = fast, 
+      method = "lm",
+      trControl = trainControl(method = "cv", number = 5))$results$RMSE
+```
+
