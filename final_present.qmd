@@ -8,70 +8,81 @@ format:
 ---
 
 
-## 1. Online Sales: multiply all online sales channels
+## 1. Online Sales: multiply all online sales channels (online_sales)
 
-```{.r}
-online_sales = src_www * src_iphone * src_android * src_ipad
-```
+- The dataset includes multiple online sales channels; combining them captures digital engagement in aggregate
 
+- Many channel columns are sparse or zero-heavy, so this helps reduce noise
 
-
-## 2. Profit per item: retail price minus BOM cost
-
-```{.r}
-profit_per_item = retailPrice - BOM Cost
-```
-
-## 3. BOM Cost per Component
-
-```{.r}
-bompercomp = BOM Cost/(Number of Components + 0.00001)
-```
-
-## 4. Total cost: units sold times BOM cost
-
-```{.r}
-total_cost = Units Sold * BOM Cost
-```
-
-## 5. No Sale
-
-```{.r}
-salenosale = ifelse(str_detect(First Order (from sales data), "no sales")
-,1,0)
-```
-
-## 6. Log Price
-
-```{.r}
-log_price = log(retailPrice),
-```
-
-## 7. Winter vs Summer: ratio of seasonal sales
-```{.r}
-winter_summer_ratio = (November + December + January + February) / 
-(May + June + July + August + 0.001)
-```
-
-## 8. Material premium
-
-```{.r}
-material_premium = case_when(
-Main Component Material %in% c("Carbon Fiber", "Aluminum", "Leather") ~ 2,
-Main Component Material %in% c("Fiberglass", "Steel", "Metal") ~ 1,
-TRUE ~ 0  # Plastic and other standard materials)
-```
-
-## 9-10. Cleaned Columns to be used
-
-```{.r}
-`pct_Direct Sales` = as.numeric(gsub("%", "", `pct_Direct Sales`))/100,
- direct_to_consumer = pct_Direct Sales
+- Strong online presence likely correlates with higher visibility and sales
 
 
- src_manual = as.numeric(gsub("%", "", src_manual))/100
- instore = src_manual
-```
+
+## 2. Profit per item: retail price minus BOM cost (profit_per_item)
+
+- retailPrice ranges from $2 to $1400 while BOM Cost varies widely, making margin variability significant
+
+- Highlights products priced above cost (and those below, which could be loss leaders)
+
+- Helps isolate where price inflation may or may not be justified
+
+## 3. BOM Cost per Component (bompercomp)
+
+- Number of Components varies from 0 to 31, indicating big differences in complexity
+
+- Controls for scale — two products with the same BOM may differ in component count
+
+- May flag products where cost per part is unusually high or low
+
+## 4. Total cost: units sold times BOM cost (total_cost)
+
+- Multiplies BOM Cost by Units Sold, scaling individual inefficiencies to business impact
+
+- Products sold in bulk with high costs will spike this feature, which may indicate overinvestment
+
+- Directly supports later profit modeling by accounting for volume
+
+## 5. No Sale (salenosale)
+
+- 928 rows show “no sales” in the date column — that’s over 1/3 of the dataset
+
+- Separates items that were technically listed but never transacted
+
+- Avoids confusing the model with zero-revenue products when predicting success
+
+## 6. Log Price (log_price)
+
+- Retail prices are right-skewed and vary by orders of magnitude
+
+- Log transformation makes price relationships more linear and easier for models to interpret
+
+- Reduces undue influence of outliers (e.g., $1400 items)
+
+## 7. Winter vs Summer: ratio of seasonal sales (winter_summer_ratio)
+
+- Sales by month are available — winter months often dominate (e.g., December, January)
+
+- This ratio compresses 8 variables into one meaningful seasonal signal
+
+- Helps detect seasonally optimized products like winter gear or summer items
+
+## 8. Material premium (material_premium)
+
+- 12 materials present, with Aluminum alone used in over 1,000 rows
+
+- Categorical conversion to numeric allows the model to factor in perceived quality
+
+- Distinguishes common materials from higher-end ones like Leather or Carbon Fiber
+
+## 9-10. Cleaned Columns to be used (instore,direct_to_consumer)
+
+- Direct sales often imply higher control over margins and customer experience
+
+- Could uncover high-margin sales strategies not visible in raw revenue
+
+- Flags products that are sold outside of digital channels
+
+- May be a proxy for legacy items or small-batch regional sales
 
 
 ## Model Tuning
