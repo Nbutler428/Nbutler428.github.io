@@ -1,0 +1,89 @@
+---
+title: "Final Presentation"
+author: "Nathan Butler, Samuel Twenhafel, Joshue Fuentes-Ventura"
+subtitle: "Team $9$"
+format: revealjs
+---
+
+# Feature Engineering
+
+# 1. Online Sales: multiply all online sales channels
+
+```{.r}
+online_sales = src_www * src_iphone * src_android * src_ipad
+```
+
+
+
+# 2. Profit per item: retail price minus BOM cost
+
+```{.r}
+profit_per_item = retailPrice - BOM Cost
+```
+
+# 3. BOM Cost per Component
+
+```{.r}
+bompercomp = BOM Cost/(Number of Components + 0.00001)
+```
+
+# 4. Total cost: units sold times BOM cost
+
+```{.r}
+total_cost = Units Sold * BOM Cost
+```
+
+# 5. No Sale
+
+```{.r}
+salenosale = ifelse(str_detect(First Order (from sales data), "no sales")
+,1,0)
+```
+
+# 6. Log Price
+
+```{.r}
+log_price = log(retailPrice),
+```
+
+# 7. Winter vs Summer: ratio of seasonal sales
+```{.r}
+winter_summer_ratio = (November + December + January + February) / 
+(May + June + July + August + 0.001)
+```
+
+# 8. Material premium
+
+```{.r}
+material_premium = case_when(
+Main Component Material %in% c("Carbon Fiber", "Aluminum", "Leather") ~ 2,
+Main Component Material %in% c("Fiberglass", "Steel", "Metal") ~ 1,
+TRUE ~ 0  # Plastic and other standard materials)
+```
+
+# 9-10. Cleaned Columns to be used
+
+```{.r}
+`pct_Direct Sales` = as.numeric(gsub("%", "", `pct_Direct Sales`))/100,
+ direct_to_consumer = pct_Direct Sales
+
+
+ src_manual = as.numeric(gsub("%", "", src_manual))/100
+ instore = src_manual
+```
+
+
+# Model Tuning
+
+- We tried multiple different types of methods
+- Some like Random Forest proved to work much worse
+- Others such as glm(Generalized Random Model) made little to no impact
+
+# Results
+
+- We got a final RMSE between roughly 1100 & 1200
+- we used varImp to roughly determine which columns are important
+- Most important were total cost & bompercomp
+- Least important instore and direct_to_consumer
+
+
