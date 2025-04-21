@@ -43,7 +43,7 @@ format:
 
 ---
 
-## Feature 4: Total Cost (`total_cost`)
+## Feature 4: Total Cost <br> (`total_cost`)
 
 
 
