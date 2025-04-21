@@ -2,7 +2,9 @@
 title: "Final Presentation"
 author: "Nathan Butler, Samuel Twenhafel, Joshue Fuentes-Ventura"
 subtitle: "Team $9$"
-format: revealjs
+format: 
+  revealjs:
+    embed-resources: true
 ---
 
 
