@@ -1155,64 +1155,64 @@ Nathan Butler, Samuel Twenhafel, Joshue Fuentes-Ventura
 </div>
 
 </section>
-<section id="online-sales-multiply-all-online-sales-channels-online_sales" class="slide level2">
-<h2>1. Online Sales: multiply all online sales channels (online_sales)</h2>
+<section id="feature-1-online-sales-online_sales" class="slide level2">
+<h2>Feature 1: Online Sales (<code>online_sales</code>)</h2>
 <ul>
 <li><p>The dataset includes multiple online sales channels; combining them captures digital engagement in aggregate</p></li>
 <li><p>Many channel columns are sparse or zero-heavy, so this helps reduce noise</p></li>
 <li><p>Strong online presence likely correlates with higher visibility and sales</p></li>
 </ul>
 </section>
-<section id="profit-per-item-retail-price-minus-bom-cost-profit_per_item" class="slide level2">
-<h2>2. Profit per item: retail price minus BOM cost (profit_per_item)</h2>
+<section id="feature-2-profit-per-item-profit_per_item" class="slide level2">
+<h2>Feature 2: Profit per Item (<code>profit_per_item</code>)</h2>
 <ul>
 <li><p>retailPrice ranges from $2 to $1400 while BOM Cost varies widely, making margin variability significant</p></li>
 <li><p>Highlights products priced above cost (and those below, which could be loss leaders)</p></li>
 <li><p>Helps isolate where price inflation may or may not be justified</p></li>
 </ul>
 </section>
-<section id="bom-cost-per-component-bompercomp" class="slide level2">
-<h2>3. BOM Cost per Component (bompercomp)</h2>
+<section id="feature-3-bom-cost-per-component-bompercomp" class="slide level2">
+<h2>Feature 3: BOM Cost per Component (<code>bompercomp</code>)</h2>
 <ul>
 <li><p>Number of Components varies from 0 to 31, indicating big differences in complexity</p></li>
 <li><p>Controls for scale — two products with the same BOM may differ in component count</p></li>
 <li><p>May flag products where cost per part is unusually high or low</p></li>
 </ul>
 </section>
-<section id="total-cost-units-sold-times-bom-cost-total_cost" class="slide level2">
-<h2>4. Total cost: units sold times BOM cost (total_cost)</h2>
+<section id="feature-4-total-cost-total_cost" class="slide level2">
+<h2>Feature 4: Total Cost (<code>total_cost</code>)</h2>
 <ul>
 <li><p>Multiplies BOM Cost by Units Sold, scaling individual inefficiencies to business impact</p></li>
 <li><p>Products sold in bulk with high costs will spike this feature, which may indicate overinvestment</p></li>
 <li><p>Directly supports later profit modeling by accounting for volume</p></li>
 </ul>
 </section>
-<section id="no-sale-salenosale" class="slide level2">
-<h2>5. No Sale (salenosale)</h2>
+<section id="feature-5-sale-vs.-no-sale-salenosale" class="slide level2">
+<h2>Feature 5: Sale vs. No Sale (<code>salenosale</code>)</h2>
 <ul>
 <li><p>928 rows show “no sales” in the date column — that’s over 1/3 of the dataset</p></li>
 <li><p>Separates items that were technically listed but never transacted</p></li>
 <li><p>Avoids confusing the model with zero-revenue products when predicting success</p></li>
 </ul>
 </section>
-<section id="log-price-log_price" class="slide level2">
-<h2>6. Log Price (log_price)</h2>
+<section id="feature-6-log-of-retail-price-log_price" class="slide level2">
+<h2>Feature 6: Log of Retail Price (<code>log_price</code>)</h2>
 <ul>
 <li><p>Retail prices are right-skewed and vary by orders of magnitude</p></li>
 <li><p>Log transformation makes price relationships more linear and easier for models to interpret</p></li>
 <li><p>Reduces undue influence of outliers (e.g., $1400 items)</p></li>
 </ul>
 </section>
-<section id="winter-vs-summer-ratio-of-seasonal-sales-winter_summer_ratio" class="slide level2">
-<h2>7. Winter vs Summer: ratio of seasonal sales (winter_summer_ratio)</h2>
+<section id="feature-7-winter-to-summer-sales-ratio-winter_summer_ratio" class="slide level2">
+<h2>Feature 7: Winter-to-Summer Sales Ratio (<code>winter_summer_ratio</code>)</h2>
 <ul>
 <li><p>Sales by month are available — winter months often dominate (e.g., December, January)</p></li>
 <li><p>This ratio compresses 8 variables into one meaningful seasonal signal</p></li>
 <li><p>Helps detect seasonally optimized products like winter gear or summer items</p></li>
 </ul>
 </section>
-<section id="material-premium-material_premium" class="slide level2">
-<h2>8. Material premium (material_premium)</h2>
+<section id="feature-8-material-premium-score-material_premium" class="slide level2">
+<h2>Feature 8: Material Premium Score (<code>material_premium</code>)</h2>
 <ul>
 <li><p>12 materials present, with Aluminum alone used in over 1,000 rows</p></li>
 <li><p>Categorical conversion to numeric allows the model to factor in perceived quality</p></li>
@@ -1220,7 +1220,7 @@ Nathan Butler, Samuel Twenhafel, Joshue Fuentes-Ventura
 </ul>
 </section>
 <section id="cleaned-columns-to-be-used-instoredirect_to_consumer" class="slide level2">
-<h2>9-10. Cleaned Columns to be used (instore,direct_to_consumer)</h2>
+<h2>9-10. Cleaned Columns to be used (<code>instore,direct_to_consumer</code>)</h2>
 <ul>
 <li><p>Direct sales often imply higher control over margins and customer experience</p></li>
 <li><p>Could uncover high-margin sales strategies not visible in raw revenue</p></li>
@@ -2254,7 +2254,7 @@ window.QuartoSupport = function () {
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'fade',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',

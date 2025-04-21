@@ -5,10 +5,12 @@ subtitle: "Team $9$"
 format: 
   revealjs:
     embed-resources: true
+    theme: white
+    transition: fade
 ---
 
+## Feature 1: Online Sales (`online_sales`)
 
-## 1. Online Sales: multiply all online sales channels (online_sales)
 
 - The dataset includes multiple online sales channels; combining them captures digital engagement in aggregate
 
@@ -16,9 +18,10 @@ format:
 
 - Strong online presence likely correlates with higher visibility and sales
 
+---
 
+## Feature 2: Profit per Item (`profit_per_item`)
 
-## 2. Profit per item: retail price minus BOM cost (profit_per_item)
 
 - retailPrice ranges from $2 to $1400 while BOM Cost varies widely, making margin variability significant
 
@@ -26,7 +29,11 @@ format:
 
 - Helps isolate where price inflation may or may not be justified
 
-## 3. BOM Cost per Component (bompercomp)
+---
+
+## Feature 3: BOM Cost per Component (`bompercomp`)
+
+
 
 - Number of Components varies from 0 to 31, indicating big differences in complexity
 
@@ -34,7 +41,11 @@ format:
 
 - May flag products where cost per part is unusually high or low
 
-## 4. Total cost: units sold times BOM cost (total_cost)
+---
+
+## Feature 4: Total Cost (`total_cost`)
+
+
 
 - Multiplies BOM Cost by Units Sold, scaling individual inefficiencies to business impact
 
@@ -42,7 +53,11 @@ format:
 
 - Directly supports later profit modeling by accounting for volume
 
-## 5. No Sale (salenosale)
+---
+
+## Feature 5: Sale vs. No Sale (`salenosale`)
+
+
 
 - 928 rows show “no sales” in the date column — that’s over 1/3 of the dataset
 
@@ -50,7 +65,11 @@ format:
 
 - Avoids confusing the model with zero-revenue products when predicting success
 
-## 6. Log Price (log_price)
+---
+
+## Feature 6: Log of Retail Price (`log_price`)
+
+
 
 - Retail prices are right-skewed and vary by orders of magnitude
 
@@ -58,7 +77,11 @@ format:
 
 - Reduces undue influence of outliers (e.g., $1400 items)
 
-## 7. Winter vs Summer: ratio of seasonal sales (winter_summer_ratio)
+---
+
+## Feature 7: Winter-to-Summer Sales Ratio (`winter_summer_ratio`)
+
+
 
 - Sales by month are available — winter months often dominate (e.g., December, January)
 
@@ -66,7 +89,11 @@ format:
 
 - Helps detect seasonally optimized products like winter gear or summer items
 
-## 8. Material premium (material_premium)
+---
+
+## Feature 8: Material Premium Score (`material_premium`)
+
+
 
 - 12 materials present, with Aluminum alone used in over 1,000 rows
 
@@ -74,7 +101,11 @@ format:
 
 - Distinguishes common materials from higher-end ones like Leather or Carbon Fiber
 
-## 9-10. Cleaned Columns to be used (instore,direct_to_consumer)
+---
+
+## 9-10. Cleaned Columns to be used (`instore,direct_to_consumer`)
+
+
 
 - Direct sales often imply higher control over margins and customer experience
 
@@ -84,12 +115,14 @@ format:
 
 - May be a proxy for legacy items or small-batch regional sales
 
+---
 
 ## Model Tuning
 
 - We tried multiple different types of methods
 - Some like Random Forest proved to work much worse
 - Others such as glm(Generalized Random Model) made little to no impact
+---
 
 ## Results
 
@@ -97,5 +130,3 @@ format:
 - we used varImp to roughly determine which columns are important
 - Most important were total cost & bompercomp
 - Least important instore and direct_to_consumer
-
-
