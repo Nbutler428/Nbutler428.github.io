@@ -5,7 +5,6 @@ subtitle: "Team $9$"
 format: revealjs
 ---
 
-## Feature Engineering
 
 ## 1. Online Sales: multiply all online sales channels
 
@@ -79,7 +78,7 @@ TRUE ~ 0  # Plastic and other standard materials)
 - Some like Random Forest proved to work much worse
 - Others such as glm(Generalized Random Model) made little to no impact
 
-# #Results
+## Results
 
 - We got a final RMSE between roughly 1100 & 1200
 - we used varImp to roughly determine which columns are important

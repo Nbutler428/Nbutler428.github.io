@@ -403,58 +403,45 @@ Nathan Butler, Samuel Twenhafel, Joshue Fuentes-Ventura
 </div>
 
 </section>
-<section id="feature-engineering" class="title-slide slide level1 center">
-<h1>Feature Engineering</h1>
-
-</section>
-
-<section id="online-sales-multiply-all-online-sales-channels" class="title-slide slide level1 center">
-<h1>1. Online Sales: multiply all online sales channels</h1>
+<section id="online-sales-multiply-all-online-sales-channels" class="slide level2">
+<h2>1. Online Sales: multiply all online sales channels</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>online_sales <span class="ot">=</span> src_www <span class="sc">*</span> src_iphone <span class="sc">*</span> src_android <span class="sc">*</span> src_ipad</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="profit-per-item-retail-price-minus-bom-cost" class="title-slide slide level1 center">
-<h1>2. Profit per item: retail price minus BOM cost</h1>
+<section id="profit-per-item-retail-price-minus-bom-cost" class="slide level2">
+<h2>2. Profit per item: retail price minus BOM cost</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>profit_per_item <span class="ot">=</span> retailPrice <span class="sc">-</span> BOM Cost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="bom-cost-per-component" class="title-slide slide level1 center">
-<h1>3. BOM Cost per Component</h1>
+<section id="bom-cost-per-component" class="slide level2">
+<h2>3. BOM Cost per Component</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>bompercomp <span class="ot">=</span> BOM Cost<span class="sc">/</span>(Number of Components <span class="sc">+</span> <span class="fl">0.00001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="total-cost-units-sold-times-bom-cost" class="title-slide slide level1 center">
-<h1>4. Total cost: units sold times BOM cost</h1>
+<section id="total-cost-units-sold-times-bom-cost" class="slide level2">
+<h2>4. Total cost: units sold times BOM cost</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>total_cost <span class="ot">=</span> Units Sold <span class="sc">*</span> BOM Cost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="no-sale" class="title-slide slide level1 center">
-<h1>5. No Sale</h1>
+<section id="no-sale" class="slide level2">
+<h2>5. No Sale</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>salenosale <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(First <span class="fu">Order</span> (from sales data), <span class="st">"no sales"</span>)</span>
 <span id="cb5-2"><a href=""></a>,<span class="dv">1</span>,<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="log-price" class="title-slide slide level1 center">
-<h1>6. Log Price</h1>
+<section id="log-price" class="slide level2">
+<h2>6. Log Price</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>log_price <span class="ot">=</span> <span class="fu">log</span>(retailPrice),</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="winter-vs-summer-ratio-of-seasonal-sales" class="title-slide slide level1 center">
-<h1>7. Winter vs Summer: ratio of seasonal sales</h1>
+<section id="winter-vs-summer-ratio-of-seasonal-sales" class="slide level2">
+<h2>7. Winter vs Summer: ratio of seasonal sales</h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>winter_summer_ratio <span class="ot">=</span> (November <span class="sc">+</span> December <span class="sc">+</span> January <span class="sc">+</span> February) <span class="sc">/</span> </span>
 <span id="cb7-2"><a href=""></a>(May <span class="sc">+</span> June <span class="sc">+</span> July <span class="sc">+</span> August <span class="sc">+</span> <span class="fl">0.001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="material-premium" class="title-slide slide level1 center">
-<h1>8. Material premium</h1>
+<section id="material-premium" class="slide level2">
+<h2>8. Material premium</h2>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>material_premium <span class="ot">=</span> <span class="fu">case_when</span>(</span>
 <span id="cb8-2"><a href=""></a>Main Component Material <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Carbon Fiber"</span>, <span class="st">"Aluminum"</span>, <span class="st">"Leather"</span>) <span class="sc">~</span> <span class="dv">2</span>,</span>
 <span id="cb8-3"><a href=""></a>Main Component Material <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Fiberglass"</span>, <span class="st">"Steel"</span>, <span class="st">"Metal"</span>) <span class="sc">~</span> <span class="dv">1</span>,</span>
 <span id="cb8-4"><a href=""></a><span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>  <span class="co"># Plastic and other standard materials)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="cleaned-columns-to-be-used" class="title-slide slide level1 center">
-<h1>9-10. Cleaned Columns to be used</h1>
+<section id="cleaned-columns-to-be-used" class="slide level2">
+<h2>9-10. Cleaned Columns to be used</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="st">`</span><span class="at">pct_Direct Sales</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"%"</span>, <span class="st">""</span>, <span class="st">`</span><span class="at">pct_Direct Sales</span><span class="st">`</span>))<span class="sc">/</span><span class="dv">100</span>,</span>
 <span id="cb9-2"><a href=""></a> direct_to_consumer <span class="ot">=</span> pct_Direct Sales</span>
 <span id="cb9-3"><a href=""></a></span>
@@ -462,18 +449,16 @@ Nathan Butler, Samuel Twenhafel, Joshue Fuentes-Ventura
 <span id="cb9-5"><a href=""></a> src_manual <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"%"</span>, <span class="st">""</span>, src_manual))<span class="sc">/</span><span class="dv">100</span></span>
 <span id="cb9-6"><a href=""></a> instore <span class="ot">=</span> src_manual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-
-<section id="model-tuning" class="title-slide slide level1 center">
-<h1>Model Tuning</h1>
+<section id="model-tuning" class="slide level2">
+<h2>Model Tuning</h2>
 <ul>
 <li>We tried multiple different types of methods</li>
 <li>Some like Random Forest proved to work much worse</li>
 <li>Others such as glm(Generalized Random Model) made little to no impact</li>
 </ul>
 </section>
-
-<section id="results" class="title-slide slide level1 center">
-<h1>Results</h1>
+<section id="results" class="slide level2">
+<h2>Results</h2>
 <ul>
 <li>We got a final RMSE between roughly 1100 &amp; 1200</li>
 <li>we used varImp to roughly determine which columns are important</li>
