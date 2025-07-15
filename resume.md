@@ -7,9 +7,9 @@ title: Resume
 
 # Nathan Butler – Resume
 
-📍 Salem, OR  
-📧 [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
-🔗 [LinkedIn](https://www.linkedin.com/in/nathan-r-butler/)
+**Location:** Salem, OR  
+**Email:** [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
+**LinkedIn:** [linkedin.com/in/nathan-r-butler](https://www.linkedin.com/in/nathan-r-butler/)
 
 ---
 
