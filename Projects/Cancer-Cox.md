@@ -3,9 +3,9 @@ layout: default
 title: Cox Regression – Cancer Survivability
 ---
 
-[← Back to Projects](/projects)
+[← Back to Projects](/Projects)
 
-# 📈 Cancer Survivability Using Cox Regression
+#  Cancer Survivability Using Cox Regression
 
 ## Summary
 
