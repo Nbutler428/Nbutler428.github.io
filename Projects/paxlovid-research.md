@@ -3,9 +3,9 @@ layout: default
 title: Paxlovid & Dysgeusia Research
 ---
 
-[← Back to Projects](/projects)
+[← Back to Projects](/Projects)
 
-# 🧪 Paxlovid & Dysgeusia Research
+#  Paxlovid & Dysgeusia Research
 
 ## Summary
 
