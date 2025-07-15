@@ -2,14 +2,13 @@
 layout: default
 title: Nathan Butler
 ---
-[Resume](/resume) | [Projects](/projects)
+[Resume](/resume) | [Projects](/Projects)
 ## Nathan Butler
 
 **Location:** Salem, OR  
 **Email:** [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
-**LinkedIn:** [linkedin.com/in/nathan-r-butler](https://www.linkedin.com/in/nathan-r-butler/)<br>
-**Resume:** [Resume](/resume)<br>
-**Projects:** [Projects](/Projects)
+**LinkedIn:** [linkedin.com/in/nathan-r-butler](https://www.linkedin.com/in/nathan-r-butler/)
+
 ---
 
 ## About Me
