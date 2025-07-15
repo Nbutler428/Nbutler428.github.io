@@ -45,5 +45,6 @@ To visualize these patterns, a **Kaplan-Meier curve** was generated, showing sur
 - A steep early decline in the number of surviving patients
 - A more gradual drop-off as time progressed
 
+[![Cancer Image](/assets/images/stage-rate.png)](/assets/images/stage-rate.png)
 
 These findings highlight the power of survival modeling for identifying high-risk groups and informing targeted interventions.
