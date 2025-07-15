@@ -6,8 +6,8 @@ title: Nathan Butler
 ## Nathan Butler
 
 #Location, Salem, OR  
-Email [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
-LinkedIn [LinkedIn](https://www.linkedin.com/in/nathan-r-butler/)
+#Email [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
+#LinkedIn [LinkedIn](https://www.linkedin.com/in/nathan-r-butler/)
 
 ---
 
