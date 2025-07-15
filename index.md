@@ -9,6 +9,7 @@ title: Nathan Butler
 **Email:** [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
 **LinkedIn:** [linkedin.com/in/nathan-r-butler](https://www.linkedin.com/in/nathan-r-butler/)
 **Resume:** [Resume](/resume)
+**Projects:** [Projects](/Projects)
 ---
 
 ## About Me
