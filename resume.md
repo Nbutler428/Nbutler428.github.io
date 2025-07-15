@@ -3,7 +3,7 @@ layout: default
 title: Resume
 ---
 
-[Home](/) | [Projects](/projects)
+[Home](/) | [Projects](/Projects)
 
 # Nathan Butler – Resume
 
