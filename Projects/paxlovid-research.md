@@ -40,7 +40,7 @@ This project explored whether Paxlovid — a COVID-19 treatment made of Nirmatre
 
 ## Poster 
 
-[![Paxlovid Dysgeusia Poster](/assets/img/paxlovid-poster.png)](/assets/img/paxlovid-poster.png)
+[![Paxlovid Dysgeusia Poster](/assets/images/paxlovid dygesia poster image.png)](/assets/images/paxlovid dygesia poster image.png)
 
 ---
 
@@ -55,7 +55,7 @@ This project explored whether Paxlovid — a COVID-19 treatment made of Nirmatre
 ## Files & Resources
 
 
--  [Code Notebook (R Markdown)](https://github.com/YOUR_USERNAME/YOUR_REPO/blob/main/Projects/PaxlovidProject/final-paxlovid.rmd)
+-  [Code Notebook (R Markdown)](https://github.com/Nbutler428/Nbutler428.github.io/blob/main/Projects/PaxlovidProject/final-paxlovid.rmd)
 - Raw Files: `PaxlovidProject/`
 
 ---
