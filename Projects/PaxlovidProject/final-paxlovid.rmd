@@ -1,0 +1,566 @@
+---
+title: "Untitled"
+output: html_document
+date: '2022-07-29'
+---
+
+```{r}
+pacman::p_load(tidyverse,data.table, dplyr, arules, arulesViz, datasets, janitor, stringr, reshape2, gt, DT, rio, writexl,ggpubr,viridis,lubridate,openxlsx,googlesheets4,splitstackshape,gt, reactable,infer,colorspace,gtsummary,webshot,kableExtra)
+```
+
+```{r}
+read_sheet("https://docs.google.com/spreadsheets/d/1C_252fB2MaMT0IktPXzWM98tqNx4fM8QlAMT2kcqky4/edit?resourcekey#gid=191427091") -> paxlovid_round2
+clean_names(paxlovid_round2)->paxlovid_round2
+as.Date(paxlovid_round2$date_of_testing)->paxlovid_round2$date_of_testing
+paxlovid_round2[-c(9:26),] -> paxlovid_round2
+```
+
+```{r}
+setnames(paxlovid_round2, old = c("sample_1_taste_quality","sample_4_taste_quality","sample_7_taste_quality","sample_9_taste_quality","sample_8_taste_quality","sample_2_taste_quality","sample_6_taste_quality","sample_3_taste_quality","sample_5_taste_quality","sample_10_taste_quality"), new = c("50um-Nirm-qual",	"100um-Nirm-qual",	"100um5%Rito-qual",	"200um5%Rito-qual",	"300um5%Rito-qual",	"50um+100um5%-qual",	"50uM+200uM-qual",	"ETOH5%-qual",	"Sucrose-.035-5-qual",	"Sucrose-.035-10-qual")) -> paxlovid_round2
+paxlovid_round2
+```
+```{r}
+setnames(paxlovid_round2, old = c("sample_1_taste_strength","sample_4_taste_strength","sample_7_taste_strength","sample_9_taste_strength","sample_8_taste_strength","sample_2_taste_strength","sample_6_taste_strength","sample_3_taste_strength","sample_5_taste_strength","sample_10_taste_strength"), new = c("50um-Nirm-samp",	"100um-Nirm-samp",	"100um5%Rito-samp",	"200um5%Rito-samp",	"300um5%Rito-samp",	"50um+100um5%-samp",	"50uM+200uM-samp",	"ETOH5%-samp",	"Sucrose-.035-5-samp",	"Sucrose-.035-10-samp")) -> paxlovid_round2
+paxlovid_round2
+```
+
+```{r}
+setnames(paxlovid_round2, old = c("extra_feedback_for_sample_1_optional","extra_feedback_for_sample_4_optional","extra_feedback_for_sample_7_optional","extra_feedback_for_sample_9_optional","extra_feedback_for_sample_8_optional","extra_feedback_for_sample_2_optional","extra_feedback_for_sample_6_optional","extra_feedback_for_sample_3_optional","extra_feedback_for_sample_5_optional","extra_feedback_for_sample_10_optional"), new = c("50um-Nirm-extra",	"100um-Nirm-extra",	"100um5%Rito-extra",	"200um5%Rito-extra",	"300um5%Rito-extra",	"50um+100um5%-extra",	"50uM+200uM-extra",	"ETOH5%-extra",	"Sucrose-.035-5-extra",	"Sucrose-.035-10-extra")) -> paxlovid_round2
+paxlovid_round2
+```
+
+``{r}
+numbers = sample(1:8, 8, replace=F)
+as.numeric(as.character(factor(paxlovid_round2$name, labels=numbers))) ->paxlovid_round2$name
+paxlovid_round2
+``
+
+```{r}
+paxlovid_round2 %>% 
+  dplyr::select("name","50um-Nirm-samp",	"100um-Nirm-samp",	"100um5%Rito-samp",	"200um5%Rito-samp",	"300um5%Rito-samp",	"50um+100um5%-samp",	"50uM+200uM-samp",	"ETOH5%-samp",	"Sucrose-.035-5-samp",	"Sucrose-.035-10-samp") -> paxlovid_testing2
+paxlovid_testing2 %>% 
+ pivot_longer(cols= ends_with('samp'), names_to = "name",names_repair = "unique") -> paxlovid_testing3
+rename(paxlovid_testing3, name = name...1) -> paxlovid_testing3
+rename(paxlovid_testing3, sample = name...2) -> paxlovid_testing3
+arrange(paxlovid_testing3,name) -> paxlovid_testing3
+paxlovid_round2 %>% 
+dplyr::select("name","50um-Nirm-qual",	"100um-Nirm-qual",	"100um5%Rito-qual",	"200um5%Rito-qual",	"300um5%Rito-qual",	"50um+100um5%-qual",	"50uM+200uM-qual",	"ETOH5%-qual",	"Sucrose-.035-5-qual",	"Sucrose-.035-10-qual") -> paxlovid_testing4
+paxlovid_testing4 %>% 
+pivot_longer(cols= ends_with('qual'), names_to = "name",names_repair = "unique") -> paxlovid_testing4
+rename(paxlovid_testing4, name = name...1) -> paxlovid_testing4
+rename(paxlovid_testing4, quality = name...2) -> paxlovid_testing4
+rename(paxlovid_testing4, taste = value) -> paxlovid_testing4
+ gsub("-qual", "", paxlovid_testing4$quality) -> paxlovid_testing4$quality
+  gsub("-samp", "", paxlovid_testing3$sample) -> paxlovid_testing3$sample
+merge(paxlovid_testing3,paxlovid_testing4, by="name",no.dups = TRUE) -> paxlovid_testing5
+distinct(paxlovid_testing5)-> paxlovid_testing5
+match_test1 <- paxlovid_testing5[paxlovid_testing5$quality==paxlovid_testing5$sample, ]
+distinct(match_test1)-> match_test1
+match_test1$quality <-NULL
+rownames(match_test1) <- NULL
+match_test1
+
+
+
+```
+```{r}
+read_sheet("https://docs.google.com/spreadsheets/d/1yDtlOvnolTES0G5-Ih4bhw7QT1iTY-koAu7JH54vlTM/edit#gid=0") -> paxlovid_round2g2
+clean_names(paxlovid_round2g2)->paxlovid_round2g2
+as.Date(paxlovid_round2g2$date_of_testing)->paxlovid_round2g2$date_of_testing
+```
+
+```{r}
+setnames(paxlovid_round2g2, old = c("sample_7_taste_quality","sample_1_taste_quality","sample_4_taste_quality","sample_8_taste_quality","sample_3_taste_quality","sample_6_taste_quality","sample_9_taste_quality","sample_2_taste_quality","sample_5_taste_quality","sample_10_taste_quality"), new = c("50um-Nirm-qual",	"100um-Nirm-qual",	"100um5%Rito-qual",	"200um5%Rito-qual",	"300um5%Rito-qual",	"50um+100um5%-qual",	"50uM+200uM-qual",	"ETOH5%-qual",	"Sucrose-.035-5-qual",	"Sucrose-.035-10-qual")) -> paxlovid_round2g2
+paxlovid_round2g2
+```
+```{r}
+setnames(paxlovid_round2g2, old = c("sample_7_taste_strength","sample_1_taste_strength","sample_4_taste_strength","sample_8_taste_strength","sample_3_taste_strength","sample_6_taste_strength","sample_9_taste_strength","sample_2_taste_strength","sample_5_taste_strength","sample_10_taste_strength"), new = c("50um-Nirm-samp",	"100um-Nirm-samp",	"100um5%Rito-samp",	"200um5%Rito-samp",	"300um5%Rito-samp",	"50um+100um5%-samp",	"50uM+200uM-samp",	"ETOH5%-samp",	"Sucrose-.035-5-samp",	"Sucrose-.035-10-samp")) -> paxlovid_round2g2
+paxlovid_round2g2
+```
+
+```{r}
+setnames(paxlovid_round2g2, old = c("extra_feedback_for_sample_7_optional","extra_feedback_for_sample_1_optional","extra_feedback_for_sample_4_optional","extra_feedback_for_sample_8_optional","extra_feedback_for_sample_3_optional","extra_feedback_for_sample_6_optional","extra_feedback_for_sample_9_optional","extra_feedback_for_sample_2_optional","extra_feedback_for_sample_5_optional","extra_feedback_for_sample_10_optional"), new = c("50um-Nirm-extra",	"100um-Nirm-extra",	"100um5%Rito-extra",	"200um5%Rito-extra",	"300um5%Rito-extra",	"50um+100um5%-extra",	"50uM+200uM-extra",	"ETOH5%-extra",	"Sucrose-.035-5-extra",	"Sucrose-.035-10-extra")) -> paxlovid_round2g2
+paxlovid_round2g2
+```
+
+``{r}
+numbers = sample(1:8, 8, replace=F)
+as.numeric(as.character(factor(paxlovid_round2$name, labels=numbers))) ->paxlovid_round2$name
+paxlovid_round2
+``
+
+```{r}
+paxlovid_round2g2 %>% 
+  dplyr::select("name","50um-Nirm-samp",	"100um-Nirm-samp",	"100um5%Rito-samp",	"200um5%Rito-samp",	"300um5%Rito-samp",	"50um+100um5%-samp",	"50uM+200uM-samp",	"ETOH5%-samp",	"Sucrose-.035-5-samp",	"Sucrose-.035-10-samp") -> paxlovid_testing2g2
+paxlovid_testing2g2 %>% 
+ pivot_longer(cols= ends_with("samp"), names_to = "name",names_repair = "unique") -> paxlovid_testing3g2
+rename(paxlovid_testing3g2, name = name...1) -> paxlovid_testing3g2
+rename(paxlovid_testing3g2, sample = name...2) -> paxlovid_testing3g2
+arrange(paxlovid_testing3g2,name) -> paxlovid_testing3g2
+paxlovid_round2g2 %>% 
+dplyr::select("name","50um-Nirm-qual",	"100um-Nirm-qual",	"100um5%Rito-qual",	"200um5%Rito-qual",	"300um5%Rito-qual",	"50um+100um5%-qual",	"50uM+200uM-qual",	"ETOH5%-qual",	"Sucrose-.035-5-qual",	"Sucrose-.035-10-qual") -> paxlovid_testing4g2
+paxlovid_testing3g2
+paxlovid_testing4g2 %>% 
+pivot_longer(cols= ends_with('qual'), names_to = "name",names_repair = "unique") -> paxlovid_testing4g2
+rename(paxlovid_testing4g2, name = name...1) -> paxlovid_testing4g2
+rename(paxlovid_testing4g2, quality = name...2) -> paxlovid_testing4g2
+rename(paxlovid_testing4g2, taste = value) -> paxlovid_testing4g2
+ gsub("-qual", "", paxlovid_testing4g2$quality) -> paxlovid_testing4g2$quality
+  gsub("-samp", "", paxlovid_testing3g2$sample) -> paxlovid_testing3g2$sample
+merge(paxlovid_testing3g2,paxlovid_testing4g2, by="name",no.dups = TRUE) -> paxlovid_testing5g2
+distinct(paxlovid_testing5g2)-> paxlovid_testing5g2
+match_testg2 <- paxlovid_testing5g2[paxlovid_testing5g2$quality==paxlovid_testing5g2$sample, ]
+distinct(match_testg2)-> match_testg2
+match_testg2$quality <-NULL
+rownames(match_testg2) <- NULL
+match_testg2
+
+
+
+
+```
+```{r}
+rbind(match_test1,match_testg2) -> match_test
+```
+
+
+```{r}
+ggplot(match_test,aes(x=value,fill=sample)) +
+  geom_bar() +
+  scale_x_continuous(breaks = seq(0,10,1)) +
+  scale_fill_manual(values=c("#00876c",
+"#4c9c85",
+"#78b19f",
+"#a0c6b9",
+"#c8dbd5",
+"#f1f1f1",
+"#f1cfce",
+"#eeadad",
+"#e88b8d",
+"#df676e")) +
+  theme_dark() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+xlab("Taste Strength") +
+ylab("") 
+```
+
+
+```{r}
+
+ggplot(match_test,aes(x=taste,fill=taste)) +
+  geom_bar(position="dodge") +
+  theme_dark() +
+  facet_grid(~ sample,scales = "free")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = element_blank(),axis.ticks.x = element_blank(),legend.position = "none",strip.text.x = element_text(size = 5))+
+scale_fill_manual(values = c("#025c2d","#026e36","#008758","#00876c",
+"#4c9c85",
+"#78b19f",
+"#a0c6b9",
+"#c8e3da",
+"#c8dbd5",
+"#f1f1f1",
+"#f1d4d4",
+"#f1cfce",
+"#eeadad",
+"#e88b8d",
+"#df676e",
+"#d43d51","#b52f41","#db0f2b","#ed0929")) +
+  geom_text(stat = "count",aes(label=taste), size=2,angle=90,hjust= -0.15) +
+  xlab("Tates") +
+  ylab("Count") +
+ylim(0,12)
+```
+```{r}
+ggplot(
+  match_test, aes(x=value)) +
+  geom_bar() +
+  scale_x_continuous(breaks = seq(0,10,1)) +
+  facet_grid(~name,scales="free") +
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1),panel.spacing = unit(.025, "lines"),
+        panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        strip.background = element_rect(color = "black", size = 1))
+```
+
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test,aes(x=value,y=sample)) +
+  scale_x_continuous(breaks = seq(0,10,1)) +
+  geom_boxplot() +
+  stat_summary(fun=mean,geom="point", shape=20, size=5,color="red") +
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip()
+```
+```{r}
+special_sauce <- c("100uM Nirm",	"100uM Rito \n 5% ETOH",	"200uM Rito \n 5% ETOH ","300uM Rito \n 5% ETOH",	"50uM Nirm",	"50uM Nirm \n 100uM Rito \n 5% ETOH",	"50uM Nirm \n 200uM Rito \n 5% ETOH",	"5% ETOH",	"Sucrose .035 5",	"Sucrose .035 10")
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Amy.H", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_point(data=match_test1[match_test1$name == "Amy.H", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Amy.H", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-1",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Katie.B", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+   geom_point(data=match_test1[match_test1$name == "Katie.B", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Katie.B", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+ labs(title = "Tester-2",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Lauren.C", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_point(data=match_test1[match_test1$name == "Lauren.C", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Lauren.C", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+ 
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-3",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Edith.A", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_point(data=match_test1[match_test1$name == "Edith.A", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Edith.A", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-4",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Sarah.M", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_point(data=match_test1[match_test1$name == "Sarah.M", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Sarah.M", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-5",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Evan.G", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_point(data=match_test1[match_test1$name == "Evan.G", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Evan.G", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-6",y="Samples", x="Intensity") +
+  scale_y_discrete(labels=special_sauce)
+```
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Shanice.J", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_point(data=match_test1[match_test1$name == "Shanice.J", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Shanice.J", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) +
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-7",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+```{r}
+#Turn your 'treatment' column into a character vector
+match_test$sample <- as.character(match_test$sample)
+#Then turn it back into a factor with the levels in the correct order
+match_test$sample <- factor(match_test$sample, levels=unique(match_test$sample))
+ggplot(match_test[match_test$name == "Yang.H", ],aes(x=value,y=sample)) +
+ scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+ geom_point(data=match_test1[match_test1$name == "Yang.H", ],aes(x=value,y=sample),shape=15,size=2.5) +
+  geom_point(data=match_testg2[match_testg2$name == "Yang.H", ],aes(x=value,y=sample),shape=6,size=4,stroke=.8) + 
+
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Tester-8",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=special_sauce)
+```
+
+
+```{r}
+
+match_test1 %>% 
+mutate(sample = fct_relevel(sample, "50um-Nirm","50um+100um5%","ETOH5%","100um-Nirm","Sucrose-.035-5","50uM+200uM","100um5%Rito","300um5%Rito","200um5%Rito","Sucrose-.035-10"))->match_temp2
+spc_sauce2 <- c("50uM Nirm","50uM Nirm \n 100uM Rito \n 5% ETOH","5% ETOH","100uM Nirm","Sucrose .035 5","50uM Nirm \n 200uM Rito \n 5% ETOH","100uM Rito \n 5% ETOH","300uM Rito \n 5% ETOH","200uM Rito \n 5% ETOH","Sucrose .035 10")
+ggplot() +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10))+
+  geom_boxplot(data=match_temp2,aes(x=value,y=sample),alpha=.8) +
+  
+  
+
+  stat_summary(data=match_test,aes(x=value,y=sample),fun=mean,geom="point", shape=20, size=3) +
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title = "Group 1",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=spc_sauce2)
+  
+
+```
+
+
+```{r}
+
+match_testg2 %>% 
+mutate(sample = fct_relevel(sample, "50um-Nirm",	"100um-Nirm",	"100um5%Rito",	"200um5%Rito",	"300um5%Rito",	"50um+100um5%",	"50uM+200uM",	"ETOH5%",	"Sucrose-.035-5",	"Sucrose-.035-10")) -> match_temp
+group_sauce <- c("50uM Nirm",	"100uM Nirm",	"100uM Rito \n 5% ETOH",	"200uM Rito \n 5% ETOH",	"300uM Rito \n 5% ETOH",	"50uM Nirm \n  100uM Rito \n  5% ETOH",	"50uM Nirm \n  200uM Rito \n  5% ETOH",	"5% ETOH",	"Sucrose .035 5",	"Sucrose .035 10")
+
+#colors <- c("Group 1" = "#E32739","Group 2" = "#1CC7ED") <- code to make legend
+ggplot() +
+scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_boxplot(data=match_temp,aes(x=value,y=sample,),alpha=.8,color="#E32739")+
+  geom_boxplot(data=match_temp2,aes(x=value,y=sample),alpha=.8,color="#1CC7ED") +
+#when creating a legend color must be within aes
+  stat_summary(data=match_test,aes(x=value,y=sample),fun=mean,geom="point", shape=20, size=3,color="#6D5B71") +
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip()  +
+   #scale_color_manual(values = colors) + < part of legend code
+  labs(title = "Multi Group",y="Samples", x="Intensity")+
+  scale_y_discrete(labels=group_sauce)
+```
+
+```{r}
+match_testg2 %>% 
+mutate(sample = fct_relevel(sample, "100um-Nirm","ETOH5%","300um5%Rito","100um5%Rito","Sucrose-.035-5","50um+100um5%","50um-Nirm","200um5%Rito","50uM+200uM","Sucrose-.035-10")) -> match_temp
+  group_sauce2 <- c("100uM Nirm","5% ETOH","300uM Rito \n 5% ETOH","100uM Rito \n 5% ETOH","Sucrose .035 5","50uM Nirm \n 100uM Rito \n 5% ETOH","50uM Nirm","200uM Rito \n 5%  ETOH","50uM Nirm \n 200uM Rito \n 5% ETOH","Sucrose .035 10")
+ggplot() +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  geom_boxplot(data=match_temp,aes(x=value,y=sample),alpha=.8) +
+  stat_summary(data=match_temp,aes(x=value,y=sample),fun=mean,geom="point") +
+  theme(axis.text.x = element_text(angle = 45,size = 7.5, hjust = 1))+
+  coord_flip() +
+  labs(title="Group2",y="Samples", x="Intensity") +
+  scale_y_discrete(labels=group_sauce2)
+  
+```
+```{r}
+summary(table(match_test$value,match_test$sample))
+```
+
+```{r}
+as.POSIXct(paxlovid_testing$date_of_testing)->paxlovid_testing$date_of_testing
+write_csv(paxlovid_testing, file = "Paxlovid-data-names.csv")
+```
+
+```{r}
+write_csv(match_test, file = "Paxlovid-long_dataa.csv")
+```
+
+```{r}
+match_test1
+```
+```{r}
+match_test1
+match_testg2
+```
+
+```{r}
+match_test$difference <- match_testg2$value - match_test1$value
+match_test
+```
+
+```{r}
+#get average based on strings of another column very good
+aggregate(difference ~ sample, match_test, mean)
+summary(match_test$difference)
+```
+```{r}
+aggregate(value ~ sample, match_test, sum)
+```
+
+
+
+```{r}
+data.frame(match_test) -> match_test
+match_test %>% 
+    mutate(V2 = strsplit(as.character(taste), ",")) %>% 
+    unnest(V2) -> match_test_split
+```
+
+```{r}
+
+str_trim(match_test_split$V2, "both") -> match_test_split$V2
+as.data.frame(match_test_split) -> match_test_split
+match_test_split[!grepl("Barely there taste", match_test_split$V2),] -> match_test_split
+
+match_test_split %>%
+  mutate(total = 1) %>%
+  select(sample, V2,total)%>%
+  gtsummary::tbl_summary(
+    by = sample,
+    label = list(sample = "Sample"),
+   statistic = total ~ "N = {N}")%>%
+  gtsummary::modify_caption("Count of Taste by sample") %>%
+  gtsummary::bold_labels() %>% 
+  modify_header(all_stat_cols() ~ "**{level}**") -> t1
+t1
+```
+
+
+
+```{r}
+str_trim(match_test$sample, "both") -> match_test$sample
+
+```
+
+
+
+
+```{r}
+str_replace_all(match_test$sample, "[+]", " ") -> match_test$sample
+str_replace(match_test$sample, "50um-Nirm","50uM Nirm") -> match_test$sample
+str_replace(match_test$sample, "100um-Nirm","100uM Nirm") -> match_test$sample
+str_replace(match_test$sample, "100um5%Rito","100uM Rito \n 5% ETOH") -> match_test$sample
+str_replace(match_test$sample, "200um5%Rito","200uM Rito \n 5%  ETOH") -> match_test$sample
+str_replace(match_test$sample, "300um5%Rito","300uM Rito \n 5%  ETOH") -> match_test$sample
+str_replace(match_test$sample, "50um 100um5%","50uM Nirm \n 100uM Rito \n 5% ETOH") -> match_test$sample
+str_replace(match_test$sample, "50uM 200uM","50uM Nirm \n 200uM Rito \n 5% ETOH") -> match_test$sample
+str_replace(match_test$sample, "ETOH5%","5% ETOH") -> match_test$sample
+str_replace(match_test$sample, "Sucrose-.035-5","Sucrose .035 5") -> match_test$sample
+str_replace(match_test$sample, "Sucrose-.035-10","Sucrose .035 10") -> match_test$sample
+
+ggtexttable(data.frame(table(match_test$sample)),cols=c("sample","count"))
+dev.off
+```
+```{r}
+ggplot(match_test,aes(x=sample,y=value)) +
+  geom_violin() +
+  geom_boxplot(width=0.1)
+```
+
+```{r}
+setnames(match_test1, old = c("name", "sample","value","taste"), new = c("name1","sample","value1","taste1")) -> match_test1
+setnames(match_testg2, old = c("name", "sample","value","taste"), new = c("name2","sample","value2","taste2")) -> match_testg2
+seq.int(nrow(match_test1)) -> match_test1$row_num
+seq.int(nrow(match_testg2)) -> match_testg2$row_num
+merge(match_test1,match_testg2,by.x=c("name1","row_num","sample"),by.y=c("name2","row_num","sample")) -> non_comb_test
+non_comb_test
+```
+```{r}
+ggplot(data=non_comb_test) +
+  geom_point(aes(x=value1,y=value2,fill=sample),shape=21, size = 4)+
+  geom_point(aes(y=value1,x=value2,fill=sample),shape=21, size = 4,position = position_dodge(width=0.5)) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10),limits = c(1,10)) +
+  
+  scale_fill_manual(values=c("#00876c",
+"#4c9c85",
+"#78b19f",
+"#a0c6b9",
+"#c8dbd5",
+"#f1f1f1",
+"#f1cfce",
+"#eeadad",
+"#e88b8d",
+"#df676e")) 
+```
+
+```{r}
+qplot(x=value1,y=value2, data=non_comb_test, geom = c("point","smooth","jitter"))
+```
+```{r}
+
+match_test %>% 
+  filter(str_detect(sample, c("50uM Nirm","100uM Rito \n 5% ETOH", "50uM Nirm \n 100uM Rito \n 5% ETOH"))) %>% 
+  filter(!str_detect(sample, "50uM Nirm \n 200uM Rito \n 5% ETOH")) %>% 
+ggplot(aes(x=sample,y=value)) +
+  geom_bar( position = "dodge", stat = "summary", fun.y = "mean",width = 0.5) +
+  labs(title="Combined 100 Rito and 50uM")
+```
+```{r}
+match_test %>% 
+  filter(str_detect(sample, c("50uM Nirm","200uM","50uM Nirm \n 200uM Rito \n 5% ETOH"))) %>% 
+  filter(!str_detect(sample, "50uM Nirm \n 100uM Rito \n 5% ETOH")) %>% 
+ggplot(aes(x=sample,y=value)) +
+  geom_bar(pstat = "summary", fun.y = "mean",width=0.5,stat = "identity") +
+   labs(title="Combined 200 Rito and 50uM")
+```
+```{r}
+match_test %>% 
+  filter(str_detect(sample, c("50uM Nirm","100uM Nirm"))) %>% 
+  filter(!str_detect(sample, "50uM Nirm \n 200uM Rito")) %>% 
+ggplot(aes(x=sample,y=value)) +
+  geom_boxplot(pstat = "summary", fun.y = "mean", width=0.25) +
+  labs(title="Nirmatrelvir Concentration")
+```
+```{r}
+match_test %>% 
+  filter(str_detect(sample, c("100uM Rito \n 5% ETOH","200uM","300uM"))) %>% 
+   filter(!str_detect(sample, c("50uM","50uM"))) %>%
+ggplot(aes(x=sample,y=value)) +
+  geom_boxplot(pstat = "summary", fun.y = "mean", width=0.25) +
+  labs(title="Ritonavir Concentration")
+```
+
+```{r}
+match_test %>% 
+  filter(str_detect(sample, c("50uM Nirm \n 200uM Rito \n 5% ETOH"
+,"50uM Nirm \n 100uM Rito \n 5% ETOH"))) %>% 
+
+ggplot(aes(x=sample,y=value)) +
+  geom_boxplot(pstat = "summary", fun.y = "mean", width=0.25) +
+  labs(title="Combined Concentrations")
+```
+```{r}
+match_test_split %>% 
+  group_by(V2) %>%
+  drop_na(V2) -> match_test_split2
+match_test_split2["observations"] <- 1
+match_test_split2 %>% 
+  drop_na(V2) -> match_test_split2
+
+ggplot(data=match_test_split2) +
+with_shadow(geom_bar(aes(x=fct_infreq(V2),y=observations),stat = "identity",fill="black",width = .5, color="black"), colour = "grey",x_offset = -2,y_offset = 20)+
+  geom_bar(aes(fct_infreq(V2), stat = "identity",y =     
+  (..count..)/sum(..count..)),fill="white",width = .5) +
+   scale_y_continuous(labels=scales::percent_format(),limits=c(0,1), expand =  
+   c(0,0),breaks = scales::pretty_breaks(n = 8)) +
+  
+  theme_linedraw() +
+  coord_flip() +
+  labs(x="Symptoms",y="Percentage") +
+  theme(axis.text.x = element_text(hjust = 0.9,angle=45)) 
+ggsave(path = "C:/Users/nates/Documents/rep1/Paxlovid",file="taste-percent.jpg", width=9, height=4, dpi=800)
+```
+
+
+

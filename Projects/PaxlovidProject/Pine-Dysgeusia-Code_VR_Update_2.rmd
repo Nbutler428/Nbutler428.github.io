@@ -1,0 +1,305 @@
+---
+title: "dysgeusia once again"
+output:
+  pdf_document: default
+  html_document: default
+date: '2022-06-27'
+---
+
+```{r}
+if (!require(pacman)) install.packages("pacman")
+if (!require(BiocManager)) install.packages("BiocManager")
+pacman::p_load(tidyverse,janitor, stringr, ggpubr, viridis, lubridate, ggridges,PhViD,openxlsx,ggfx)
+BiocManager::install("LBE",update = F)
+
+```
+```{r}
+read.xlsx("C:/Users/nates/Documents/rep1/Dysgeusia/caers_upda.xlsx", detectDates = TRUE)->caers_upd
+caers_upd
+```
+
+
+```{r}
+caers_upd %>% 
+clean_names() -> caers_upd
+rename(caers_upd,symptoms = case_meddra_preferred_terms) -> caers_upd
+str_trim(caers_upd$symptoms,"both")->caers_upd$symptoms
+str_trim(caers_upd$product,"both")->caers_upd$product
+str_to_upper(caers_upd$symptoms)->caers_upd$symptoms
+caers_upd
+```
+```{r}
+caers_upd$Dys = str_extract(caers_upd$symptoms,"DYSGEUSIA")
+caers_upd$Dys[is.na(caers_upd$Dys)==FALSE] <- "DYSGEUSIA"
+caers_upd$Dys[is.na(caers_upd$Dys)] <- "NOT DYSGEUSIA"
+caers_upd
+```
+```{r}
+sort(table(caers_upd$Dys), decreasing=TRUE)[1:10]
+```
+```{r}
+caers_upd$product<-str_to_upper(caers_upd$product)
+caers_upd$pine = str_extract(caers_upd$product,"PIGNOLIA|PIGNOLI|PINENUT|PINE NUT|PINON|PIGNOLA|PINOL")
+caers_upd$pine[is.na(caers_upd$pine)==FALSE] <- "PINE"
+caers_upd$pine[is.na(caers_upd$pine)] <- "NOT PINE"
+caers_upd
+```
+
+```{r}
+caers_upd_suspect<-caers_upd[grep(caers_upd$product_type,pattern = "SUSPECT"),]
+
+duplicated<-caers_upd_suspect[duplicated(caers_upd_suspect$report_id),]
+
+#THIS IS ONE THAT INVOLVES PINENUTS AND IS DUPLICATED WITH PESTO SALAD
+caers_upd_suspect_<-caers_upd_suspect[-132394,]
+
+#37710 DUPLICATED REPORTS
+duplicated_<-caers_upd_suspect_[duplicated(caers_upd_suspect_$report_id),]
+
+#110623 Reports in Total
+caers_upd_non_duplicated<-caers_upd_suspect_[!duplicated(caers_upd_suspect_$report_id),]
+
+```
+
+```{r}
+sort(table(caers_upd_non_duplicated$pine), decreasing=TRUE)[1:10]
+```
+```{r}
+caers_upd_non_duplicated %>% 
+  filter(Dys%in% c("Dysgeusia","DYSGEUSIA")) -> caers_dys_only
+caers_dys_only
+```
+```{r}
+sort(table(caers_dys_only$pine), decreasing=TRUE)[1:10]
+```
+
+```{r}
+sort(table(caers_dys_only$product), decreasing=TRUE)[1:10]
+```
+```{r}
+caers_dys_only %>% 
+  filter(pine=="PINE") -> caers_pine_only
+caers_pine_only
+```
+```{r}
+sort(table(caers_pine_only$product
+           ), decreasing = TRUE)[1:40]
+```
+
+
+```{r}
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "TRADER JOE'S|TRADER JOE|TRADER JOES|TRADERS") ~ "TRADER JOES PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "AMPORT") ~ "AMPORT PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "AURORA NATURAL") ~ "AURORA NATURAL PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "VALUED NATURAL|VALUE NATURAL") ~ "VALUED NATURALS PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "FISHER") ~ "FISHER PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "CENTO") ~ "CENTO PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "MELISSA") ~ "MELISSAS PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "WINCO") ~ "WINCO PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "GOOD") ~ "GOOD SENSE PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "KIRKLAND|COSTCO") ~ "COSTCO/KIRKLAND PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "BAZZINI") ~ "BAZZINI PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "WHOLE FOOD") ~ "WHOLE FOODS PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "SABRA") ~ "SABRA PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "WOODSTOCK") ~ "WOODSTOCK PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only %>% 
+ mutate(product = case_when(
+    str_detect(product, "FRIEDA|FRIDA|FREIDA") ~ "FRIEDA PINE NUTS", TRUE ~ product)) -> caers_pine_only
+caers_pine_only 
+```
+
+```{r}
+sort(table(caers_pine_only$product), decreasing = TRUE)[1:30]
+```
+
+```{r}
+862/1670
+```
+```{r}
+caers_pine_only$month <- lubridate::month(caers_pine_only$caers_created_date)
+caers_pine_only$year <- lubridate::year(caers_pine_only$caers_created_date)
+
+counts<-caers_pine_only %>% group_by(year,month) %>% count()
+counts$ym<-paste(counts$year,counts$month,sep="-") %>% ym()
+p<-ggplot(counts,aes(x=ym, y=n)) + geom_bar(stat = "identity") + theme_bw() + ylab("Number of Cases (per month)") + xlab("") + ggtitle("Distribution of CAERS Reports of Dysgeusia Attributed To Pine Nuts Between 2004-2021")
+
+p1<- p + annotate("rect",xmin=ym("2009-1"),xmax=ym("2012-2"),ymin=0,ymax=100,alpha=0.2) + annotate("segment",xend=ym("2010-12"),x=ym("2013-2"),yend=56,y=70,size=1,color="darkred",arrow=arrow(type = "closed",angle = 30,length=unit(0.2,"cm")))
+
+p2<- p1 + geom_text(aes(x=ym("2015-1"),y=74,label=c("Outbreak of Pine Mouth Syndrome")))
+
+p3<-p2 + geom_text(aes(x=ym("2016-1"),y=25,label=c("Second Outbreak?")))
+
+p3
+```
+
+```{r}
+caers_pine_only$yearmonth<-paste(caers_pine_only$year,caers_pine_only$month,sep="") %>% ym()
+```
+
+
+```{r}
+product_top<-sort(table(caers_pine_only$product),decreasing = T) %>% tibble()
+top_ten<-attributes(product_top$.)[[2]][[1]][1:10]
+
+
+top_ten_only<-caers_pine_only %>% filter(product %in% top_ten)
+```
+
+
+```{r}
+ggplot(top_ten_only,aes(x=yearmonth, y=product, fill =product)) + ggridges::geom_density_ridges(stat = "binline",bins=160,panel_scaling = F) + xlab("") + ylab("") + theme_minimal() + theme(legend.position="none")
+
+ggplot(top_ten_only,aes(x=year, fill =product)) + geom_bar(position = "dodge",) + theme_bw() + xlab("")
+```
+
+
+
+```{r}
+caers_upd_non_duplicated$pine_factor<-factor(caers_upd_non_duplicated$pine,levels =c("PINE","NOT PINE"))
+ggtexttable(table(caers_upd_non_duplicated$pine_factor,caers_upd_non_duplicated$Dys))
+
+ggtexttable(data.frame(table(top_ten_only$product)),cols =c("Brand","Count"))
+```
+```{r}
+dat<-caers_upd_non_duplicated %>% group_by(pine,Dys) %>% count()
+dat<-as.data.frame(dat)
+
+
+A=dat$n[3]
+B=dat$n[4]
+C=dat$n[1]
+D=dat$n[2]
+N=A+B+C+D
+#ODD RATIO
+OR=(A*D)/(B*C)
+
+#CI OR
+SE<-sqrt((1/A) + (1/B) + (1/C) + (1/D))
+Z=(1.96*SE)
+LBOR<-OR/exp(Z)
+UBOR<-OR*exp(Z)
+OR
+LBOR
+UBOR
+
+PRR<-(A/(A+B))/(C/(C+D))
+SE_<-sqrt((B/(A*(A+B)))+(D/(C*(C+D))))
+Z_=1.96*SE_
+LBPRR<-PRR/exp(Z_)
+UBPRR<-PRR*exp(Z_)
+PRR
+LBPRR
+UBPRR
+
+chisq.test(caers_upd_non_duplicated$Dys,caers_upd_non_duplicated$pine_factor)
+```
+
+```{r}
+ caers_dys_only %>% 
+    mutate(symptoms_split = strsplit(as.character(symptoms), ",")) %>% 
+    unnest(symptoms_split) -> caers_split
+    as.numeric(caers_split$Dys) -> caers_split$Dys
+    as.data.frame(caers_split)->caers_split
+caers_split
+```
+```{r}
+sort(table(caers_split$dys_symptoms),decreasing = TRUE)[1:10]
+```
+
+
+
+```{r}
+caers_split$dys_symptoms = str_extract(caers_split$symptoms_split, "DYSGEUSIA|HYPERSENSITIVITY|NAUSEA|VOMITING|HEADACHE|ABDOMINAL PAIN|BURNING SENSATION|DIARRHOEA|MALAISE|PARAESTHESIA")
+caers_split$dys_symptoms[is.na(caers_split$dys_symptoms)]
+caers_split
+```
+```{r}
+sort(table(caers_split$dys_symptoms), decreasing = TRUE)[1:10]
+```
+
+```{r}
+caers_split %>% 
+  group_by(dys_symptoms) %>%
+  drop_na(dys_symptoms) %>% 
+  summarise(count = n()) %>% 
+  mutate(Label= paste0(count, " - ", round(count / sum(count) * 100, 2), "%")) -> caers_split_percent
+label_perc <- c("0.28", "79.6", "5.12" , "9.91" , "0.32" , "2.12", "5.3")
+caers_split_percent["observations"] <- 1700
+as.data.frame(caers_split_percent) -> caers_split_percent 
+ggplot(data = caers_split) +
+  geom_bar(aes(x=dys_symptoms,y=observations),stat = "identity",fill="black",color="black") +
+  geom_bar(aes(x=dys_symptoms),fill="white",color="black")+
+  coord_flip() + 
+  theme_linedraw() +
+  scale_y_continuous(labels = scales::percent_format(), limits=c(0,1))
+  
+```
+
+
+```{r}
+caers_split %>% 
+  group_by(dys_symptoms) %>%
+  drop_na(dys_symptoms) -> caers_split_percent
+caers_split_percent["observations"] <- 1
+caers_split_percent %>% 
+  drop_na(dys_symptoms) -> caers_split_percent
+
+ggplot(data=caers_split_percent) +
+with_shadow(geom_bar(aes(x=fct_infreq(dys_symptoms),y=observations),stat = "identity",fill="black",width = .5, color="black"), colour = "grey",x_offset = -2,y_offset = 20)+
+  geom_bar(aes(fct_infreq(dys_symptoms), stat = "identity",y =     
+  (..count..)/sum(..count..)),fill="white",width = .5) +
+   scale_y_continuous(labels=scales::percent_format(),limits=c(0,1), expand =  
+   c(0,0),breaks = scales::pretty_breaks(n = 8)) +
+  
+  theme_linedraw() +
+  coord_flip() +
+  labs(x="Symptoms",y="Percentage") +
+  theme(axis.text.x = element_text(hjust = 0.9,angle=45)) 
+  ggsave(path = "C:/Users/nates/Documents/rep1/Dysgeusia",file="bench_query_sort.jpg", width=9, height=4, dpi=800)
+```
+
+```{r}
+ggplot(data = caers_split_percent) +
+  geom_violin(aes(x=dys_symptoms),fill="black",color="black") +
+
+  coord_flip() + 
+  theme_linedraw() 
+```
+
+```{r}
+data.frame(caers_dys_only) -> caers_dys_only
+match_test %>% 
+    mutate(V2 = strsplit(as.character(taste), ",")) %>% 
+    unnest(V2) -> pine_nut_split
+```
+
+
+
