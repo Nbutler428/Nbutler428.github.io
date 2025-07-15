@@ -1,19 +1,16 @@
 ---
 layout: default
-title: Portfolio
+title: Nathan Butler
 ---
 
-# Hi, I'm Nathan Butler 
+# Nathan Butler
 
-Welcome to my portfolio site!  
-Here’s a bit about me, my work, and how to get in touch.
+📍 Salem, OR  
+📧 [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
+🔗 [LinkedIn](https://www.linkedin.com/in/nathan-r-butler/)
 
-## Projects
-- **Project A**: Description
-- **Project B**: Description
+---
 
-## Contact
-[Email Me](nbutler428@gmail.com)
+## About Me
 
-
-<!-- force rebuild -->
+I'm a data science graduate student passionate about turning complex data into actionable insights that support public good. With hands-on experience in technical support, clinical research, and real-time data engineering, I thrive at the intersection of technology and real-world impact. I’m especially drawn to environments where collaboration, curiosity, and mutual respect are core values — places that prioritize thoughtful communication and empower teams to grow together. Whether it's building ETL pipelines or consulting on statistical models, I enjoy work that’s both intellectually challenging and socially meaningful.
