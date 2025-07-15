@@ -1,0 +1,1 @@
+places for image resources
