@@ -3,11 +3,11 @@ layout: default
 title: Nathan Butler
 ---
 
-# Nathan Butler
+## Nathan Butler
 
-📍 Salem, OR  
-📧 [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
-🔗 [LinkedIn](https://www.linkedin.com/in/nathan-r-butler/)
+#Location, Salem, OR  
+Email [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
+LinkedIn [LinkedIn](https://www.linkedin.com/in/nathan-r-butler/)
 
 ---
 
