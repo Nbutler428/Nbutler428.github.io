@@ -32,7 +32,7 @@ The Cox model estimates how different variables (like stage or gender) impact th
 
 ```math
 h(t) = h₀(t) × exp(b₁X₁ + b₂X₂ + ... + bₚXₚ)
-
+```
 ---
 
 ## Results
