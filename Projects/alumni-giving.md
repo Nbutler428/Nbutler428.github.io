@@ -45,7 +45,7 @@ This project analyzed donation patterns among alumni athletes at Juniata College
 ## Visual Summary
 
 **PDF Report**  
--  [View Full Slide Presentation (PDF)](https://github.com/Nbutler428/Nbutler428.github.io/blob/main/Projects/alumni-proj/Time%20Trends%20Presentation.pdf)
+-  [View Full Slide Presentation (PDF)](/assets/Time Trends Presentation.pdf)
 
 
 ---
