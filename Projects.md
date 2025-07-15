@@ -24,3 +24,11 @@ Created a clinical trial to explore a correlation between the COVID-19 drug Paxl
 Analyzed donor behavior to help optimize outreach campaigns, reducing mailing costs while improving ROI.
 
 [Read more →](/Projects/alumni-giving)
+
+---
+
+## [ Cox Regression Cancer Survivability](/projects/cancer-Cox)
+**Tools:** Python, Lifelines, Pandas, Matplotlib  
+Used Cox Proportional Hazards modeling to analyze survival trends in cancer patients using the Seer database.
+
+[Read more →](/Projects/Cancer-Cox)
