@@ -1,0 +1,390 @@
+---
+title: "Clean_alem"
+output: pdf_document
+date: '2022-09-19'
+---
+
+```{r setup, include=FALSE}
+pacman::p_load(tidyverse,data.table, dplyr, arules, arulesViz, datasets, janitor, stringr,DT,ggpubr,viridis,lubridate, reactable,infer,colorspace,gtsummary,webshot,formattable,summarytools,car,FSA)
+
+```
+```{r cars}
+read.csv("renamed_livingalumniathletes(1).csv") -> liv_alum
+liv_alum
+```
+
+```{r}
+table(sort(liv_alum$source))
+```
+
+```{r}
+clean_names(liv_alum) -> liv_alum
+liv_alum <- liv_alum %>%
+  mutate(last_donation_date = mdy(last_donation_date))
+liv_alum <- liv_alum %>%
+  mutate(high_donation_date = mdy(high_donation_date))
+liv_alum 
+
+```
+```{r}
+gsub(",([[:alpha:]])", ", \\1", liv_alum$interests) -> liv_alum$interests
+liv_alum
+```
+
+```{r}
+cc <- "ABB|AMBK|AWBK|PCH|AMXC|AWXC|AWFH|AFB|AGF|AWGF|AMLA|AWLA|AMSC|AWSC|ASB|ASW|AWSW|AMTN|AWTN|ATF|AWTF|AMVB|AWVB"
+  liv_alum$inter_sport = str_extract_all(liv_alum$interests,cc)
+liv_alum$inter_sport[is.na(liv_alum$inter_sport)] <- NA
+liv_alum
+```
+```{r}
+sapply(liv_alum$inter_sport, function(x) glue::glue_collapse(x, sep = ",")) -> liv_alum$inter_sport 
+liv_alum
+```
+
+```{r}
+format(liv_alum$high_donation_date,"%m") -> liv_alum$high_donation_month
+as.numeric(liv_alum$high_donation_month) -> liv_alum$high_donation_month
+month.abb[liv_alum$high_donation_month] -> liv_alum$high_donation_month
+liv_alum
+```
+
+```{r}
+yq <- as.yearqtr(as.yearmon(liv_alum$high_donation_date, "%Y/%m/ %>% %>% d") + 1/12)
+liv_alum$season <- factor(format(yq, "%q"), levels = 1:4, 
+                labels = c("winter", "spring", "summer", "fall"))
+```
+
+
+
+```{r}
+liv_alum %>%
+mutate(alum_term = if_else(lifetime_contrib == 0.00, "Never-Ever" , "Non-Donor")) -> liv_alum
+liv_alum %>%
+mutate(alum_term = case_when(fy22_giving > 0.00 ~ "Lybunt",
+TRUE ~ as.character(alum_term))) -> liv_alum
+liv_alum %>%
+mutate(alum_term = case_when(fy22_giving == 0.00 & (fy21_giving |fy20_giving |fy19_giving | fy18_giving) > 0 ~ "Sybunt",
+TRUE ~ as.character(alum_term))) -> liv_alum
+liv_alum %>%
+mutate(alum_term = case_when(fy22_giving > 0.00 & fy21_giving > 0.00 & fy20_giving > 0.00 & fy19_giving > 0.00 & fy18_giving > 0.00 ~ "Loyal",
+TRUE ~ as.character(alum_term))) -> liv_alum
+liv_alum
+
+```
+
+```{r}
+liv_alum %>% 
+filter(grepl("ALU", source)) -> liv_alum2
+liv_alum2
+```
+
+
+```{r}
+liv_alum %>%
+mutate(grp = strsplit(as.character(inter_sport), ",")) %>%
+unnest(grp) %>% 
+mutate(Total = 1) %>%
+select(alum_term,grp,Total)%>%
+filter(grepl("ABB|AFB|AGF|AMBK|AMLA|AMSC|AMTN|AMVB", grp)) %>%
+gtsummary::tbl_summary(
+by = grp,
+label = list(alum_term = "Alumni Type"),
+statistic = Total ~ "N = {N}")%>%
+gtsummary::modify_caption("") %>%
+gtsummary::modify_header(label ~ "**Team Played**") %>%
+gtsummary::bold_labels() %>%
+modify_header(all_stat_cols() ~ "**{level}**") -> t1
+t1
+```
+```{r}
+
+liv_alum %>%
+mutate(grp = strsplit(as.character(inter_sport), ",")) %>%
+unnest(grp) %>% 
+mutate(Total = 1) %>%
+select(alum_term,grp,Total)%>%
+filter(grepl("AMVB|AMXC|ASB|ASW|ATF|AWBK|AWFH|AWGF", grp)) %>%
+gtsummary::tbl_summary(
+by = grp,
+label = list(alum_term = "Alumni Type"),
+statistic = Total ~ "N = {N}")%>%
+gtsummary::modify_caption("") %>%
+gtsummary::modify_header(label ~ "**Team Played**") %>%
+gtsummary::bold_labels() %>%
+modify_header(all_stat_cols() ~ "**{level}**") -> t2
+t2
+```
+
+```{r}
+liv_alum %>%
+mutate(grp = strsplit(as.character(inter_sport), ",")) %>%
+unnest(grp) %>% 
+mutate(Total = 1) %>%
+select(alum_term,grp,Total)%>%
+filter(grepl("AWLA|AWSC|AWSW|AWTF|AWTN|AWVB|AWXC|PCH", grp)) %>%
+gtsummary::tbl_summary(
+by = grp,
+label = list(alum_term = "Alumni Type"),
+statistic = Total ~ "N = {N}")%>%
+gtsummary::modify_caption("") %>%
+gtsummary::modify_header(label ~ "**Team Played**") %>%
+gtsummary::bold_labels() %>%
+modify_header(all_stat_cols() ~ "**{level}**") -> t3
+t3
+gtsave(as_gt(t3),filename = "AfterAWLA3.png")
+gtsave(as_gt(t2),filename = "AfterAWLA2.png")
+gtsave(as_gt(t1),filename = "AfterAWLA1.png")
+```
+
+```{r}
+sort(table(liv_alum_single$inter_sport), decreasing = T)[1:10]
+```
+```{r}
+liv_alum_single %>%
+mutate(Total = 1) %>%
+mutate(grp = strsplit(as.character(inter_sport), ",")) %>%
+unnest(grp) %>% 
+select(alum_term,grp,Total)%>%
+filter(grepl("AFB|ABB|AWFH|ATF|AMSC", grp)) %>%
+gtsummary::tbl_summary(
+by = grp,
+label = list(alum_term = "Alumni Type"),
+statistic = Total ~ "N = {N}")%>%
+gtsummary::modify_caption("") %>%
+gtsummary::modify_header(label ~ "**Alum Intrests**") %>%
+gtsummary::bold_labels() %>%
+ modify_header(all_stat_cols() ~ "**{level}**") -> ttop5
+ttop5
+gtsave(as_gt(ttop5),filename = "AfterAWLAtop5.png")
+```
+
+```{r}
+liv_alum %>%
+mutate(grp = strsplit(as.character(inter_sport), ",")) %>%
+unnest(grp) %>% 
+select(alum_term,grp) -> liv_alum_grp
+liv_alum_grp
+
+```
+
+
+```{r}
+colorpallete_1 <- c("#003f5c","#58508d","#bc5090","#ff6361","#ffa600")
+ggplot(liv_alum_grp, aes(fct_infreq(grp) %>% droplevels(),fill=factor(alum_term))) +
+  geom_bar(position="fill") +
+  theme_bw() +
+  theme(axis.text.x = element_text(hjust = 0.9,angle=45,size = 8)) +
+   geom_text(aes(label = unlist(tapply(..count.., list(..x.., ..PANEL..), 
+   function(a) paste(round(100*a/sum(a)),'%'))),
+   y = ..count.. ), stat = "count",
+   position = position_fill(),vjust=1.4,size = 2,hjust=0.8,angle=40,color="black") +
+  scale_y_continuous(labels=scales::percent_format(),limits=c(0,1), expand =  
+   c(0,0),breaks = scales::pretty_breaks(n = 8)) +
+scale_fill_manual(values=colorpallete_1,breaks = c("Loyal","Lybunt","Sybunt","Never-Ever","Non-Donor")) +
+  labs(x="Sports Played",y="Percent",fill = "Alumni Engagement Level") -> percentage_graph
+ggsave(percentage_graph,file = "percentage_graph.png")
+
+```
+```{r}
+liv_alum[!grepl(",",liv_alum$inter_sport),] -> liv_alum_single
+```
+
+
+```{r}
+ggplot(liv_alum_single, aes(fct_infreq(inter_sport) %>% droplevels(),fill=alum_term)) +
+geom_bar() +
+theme_bw() +
+theme(axis.text.x = element_text(hjust = 0.9,angle=45,size = 8)) +
+labs(x="Sport Played",y="Count",fill=("Alumni Engagement Level")) +
+  scale_fill_manual(values=colorpallete_1,breaks = c("Loyal","Lybunt","Sybunt","Never-Ever","Non-Donor")) -> single_graph
+ggsave(single_graph, file = "single_graph.png") 
+  
+```
+
+
+```{r}
+liv_alum %>%
+mutate(Total = 1) %>%
+mutate(grp = strsplit(as.character(inter_sport), ",")) %>%
+unnest(grp) %>% 
+select(alum_term,grp,Total)%>%
+gtsummary::tbl_summary(
+by = grp,
+label = list(alum_term = "Alumni Type"),
+statistic = Total ~ "N = {N}")%>%
+gtsummary::modify_caption("") %>%
+gtsummary::modify_header(label ~ "**Alum Intrests**") %>%
+gtsummary::bold_labels() %>%
+ modify_header(all_stat_cols() ~ "**{level}**") -> ttop_all
+ttop_all
+```
+
+```{r}
+liv_alum %>% 
+  ggplot(aes(x=factor(alum_term,levels=c("Loyal","Lybunt","Sybunt","Never-Ever","Non-Donor")), fill = alum_term)) +
+  geom_bar() +
+  theme_bw() +
+  theme(legend.position = "none") +
+  scale_fill_manual(values = colorpallete_1,breaks = c("Loyal","Lybunt","Sybunt","Never-Ever","Non-Donor"))+
+  labs(x="Alumni Engagement Level ",y="Count") -> super_simple_like_super
+ggsave(super_simple_like_super, file= "super_duper_simple.png")
+```
+
+```{r}
+sort(table(liv_alum$alum_term))
+```
+```{r}
+ table(liv_alum_grp$grp, liv_alum_grp$alum_term) %>% 
+  chisq.test() -> chisq_grp
+chisq_grp$expected
+```
+
+```{r}
+liv_alum_grp[!grepl("AWGF|ASW|AWLA|AMLA|AGF",liv_alum_grp$grp),] -> liv_alum_chi
+```
+
+```{r}
+ table(liv_alum_chi$grp, liv_alum_chi$alum_term) %>% 
+  chisq.test() -> chisq_grp
+chisq_grp$expected
+```
+
+```{r}
+liv_alum %>% 
+ pivot_longer(cols= c("fy22_giving","fy21_giving","fy20_giving","fy19_giving","fy18_giving"), names_to = "name",names_repair = "unique") -> liv_alum_longer
+```
+```{r}
+aov(donation_count ~ name, data = liv_alum_longer) 
+```
+
+```{r}
+ flights %>% 
+  group_by(origin) %>% 
+  summarize(count = n())
+```
+```{r}
+read.csv("renamed_contributions.csv") -> contrib
+contrib
+```
+
+```{r}
+contrib[grepl("Gift",contrib$contrib_typ),] -> contrib_gift
+```
+
+```{r}
+contrib_gift$value <- 1
+contrib_gift
+```
+
+```{r}
+aov(value ~ contrib_fiscal_year, data = contrib_gift) -> contrib_aov
+summary.aov(contrib_aov)
+```
+```{r}
+plot(contrib_aov,4)
+```
+```{r}
+contrib_gift %>%
+  group_by(contrib_fiscal_year) %>%
+  summarize(count = n()) -> contrib_gift_anova
+```
+
+```{r}
+aov(count ~ contrib_fiscal_year, data = contrib_gift_anova) -> contrib_aov
+summary.aov(contrib_aov)
+```
+
+```{r}
+contrib_gift %>% 
+ pivot_wider(names_from = contrib_fiscal_year, values_from = value) -> liv_alum_wider
+```
+
+
+```{r}
+contrib %>% 
+  group_by(contrib_fiscal_year, fund_name) %>% 
+  summarise(count = n()) -> stoopid
+```
+```{r}
+aov(count ~ contrib_fiscal_year, data = stoopid) -> stupid_aov
+summary(stupid_aov)
+stoopid %>% 
+  ggplot(aes(sample=count)) +
+  stat_qq() + theme_bw()
+```
+
+```{r}
+stoopid %>% 
+filter(grepl("2017-2018",contrib_fiscal_year)) %>% 
+  ggplot(aes(sample=count)) +
+  stat_qq() + theme_bw()
+```
+```{r}
+stoopid %>% 
+filter(grepl("2018-2019",contrib_fiscal_year)) %>% 
+  ggplot(aes(sample=count)) +
+  stat_qq() + theme_bw()
+```
+```{r}
+stoopid %>% 
+filter(grepl("2019-2020",contrib_fiscal_year)) %>% 
+  ggplot(aes(sample=count)) +
+  stat_qq() + theme_bw()
+```
+```{r}
+stoopid %>% 
+filter(grepl("2020-2021",contrib_fiscal_year)) %>% 
+  ggplot(aes(sample=count)) +
+  stat_qq() + theme_bw()
+```
+```{r}
+stoopid %>% 
+filter(grepl("2021-2022",contrib_fiscal_year)) %>% 
+  ggplot(aes(sample=count)) +
+  stat_qq() + theme_bw()
+```
+
+```{r}
+leveneTest(count ~ contrib_fiscal_year, data = stoopid) -> levene_gift
+
+```
+
+```{r}
+plot(stupid_aov,2)
+```
+
+```{r}
+kruskal.test(count ~ contrib_fiscal_year, data = stoopid)
+```
+
+```{r}
+aov_residuals <- residuals(object = stupid_aov)
+shapiro.test(x = aov_residuals )
+```
+```{r}
+dunnTest(count ~ contrib_fiscal_year,
+         data=stoopid,
+         method="bonferroni")
+
+```
+
+```{r}
+contrib["pre_post"] <- NA
+contrib %>%
+mutate(pre_post = case_when(contrib_fiscal_year == "2017-2018" | contrib_fiscal_year == "2018-2019" | contrib_fiscal_year == "2019-2020" ~ "pre", TRUE ~ as.character(pre_post))) -> contrib_pre_post
+
+contrib_pre_post %>%
+mutate(pre_post = case_when(contrib_fiscal_year == "2020-2021"| contrib_fiscal_year == "2021-2022" ~ "post", TRUE ~ as.character(pre_post))) -> contrib_pre_post
+```
+
+```{r}
+t.test(contrib_amt ~ pre_post, data = contrib_pre_post)
+```
+
+```{r}
+contrib_pre_post %>% 
+filter(grepl("post",pre_post)) %>% 
+summary(contrib_amt)
+```
+
