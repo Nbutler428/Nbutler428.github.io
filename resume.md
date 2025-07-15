@@ -13,6 +13,12 @@ title: Resume
 
 ---
 
+## Download Resume (PDF)
+
+[Click here to download the PDF version of my resume](/assets/Tailored Resume Nathan-Butler.pdf)<br>
+[Click here to download the PDF version of my  comprehensive resume](/assets/Comprehensive Resume-Nathan-Butler.pdf)
+---
+
 ## Professional Summary
 
 Data-driven and solutions-oriented data science graduate student with hands-on experience in technical support, statistical analysis, and collaborative research. Dedicated to building data systems that improve organizational performance and real-world outcomes. Skilled at translating technical findings into actionable improvements, with a deep interest in leveraging technology to enhance public services.
