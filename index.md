@@ -2,7 +2,7 @@
 layout: default
 title: Nathan Butler
 ---
-
+[Resume](/resume) | [Projects](/projects)
 ## Nathan Butler
 
 **Location:** Salem, OR  
