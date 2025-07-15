@@ -27,7 +27,7 @@ Analyzed donor behavior to help optimize outreach campaigns, reducing mailing co
 
 ---
 
-## [ Cox Regression Cancer Survivability](/Projects/cancer-Cox)
+## [ Cox Regression Cancer Survivability](/Projects/Cancer-Cox)
 **Tools:** Python, Lifelines, Pandas, Matplotlib  
 Used Cox Proportional Hazards modeling to analyze survival trends in cancer patients using the Seer database.
 
