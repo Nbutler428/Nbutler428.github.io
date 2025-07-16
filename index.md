@@ -4,6 +4,7 @@ title: Nathan Butler
 ---
 [Resume](/resume) | [Projects](/Projects)
 ## Nathan Butler
+**Pronouns** He/Him
 
 **Location:** Salem, OR  
 **Email:** [nbutler428@gmail.com](mailto:nbutler428@gmail.com)  
