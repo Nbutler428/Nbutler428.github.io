@@ -53,11 +53,7 @@ This project explored whether Paxlovid — a COVID-19 treatment made of Nirmatre
 ---
 
 ## Files & Resources
-
-
 -  [Code Notebook (R Markdown)](https://github.com/Nbutler428/Nbutler428.github.io/blob/main/Projects/PaxlovidProject/final-paxlovid.rmd)
-- Raw Files: `PaxlovidProject/`
-
 ---
 
 ## Skills Demonstrated
