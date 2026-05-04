@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-Time Transit Pipeline – Nathan Butler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0f2444; --teal: #1a7a8a; --teal-light: #d0eef2;
+      --accent: #e8a838; --text: #1e2a38; --muted: #5a6a7a;
+      --bg: #f8fafc; --white: #ffffff; --border: #dde4ed;
+      --radius: 12px; --shadow: 0 4px 24px rgba(15,36,68,.10);
+    }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); line-height: 1.65; }
+    nav {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem); height: 60px;
+    }
+    .nav-brand { font-weight: 700; font-size: 1rem; color: var(--navy); text-decoration: none; }
+    .nav-back { font-size: .875rem; font-weight: 500; color: var(--teal); text-decoration: none; }
+    .nav-back:hover { text-decoration: underline; }
+    .project-hero {
+      background: linear-gradient(135deg, #0a1628 0%, #0f2a4a 60%, #1a3a5c 100%);
+      color: var(--white);
+      padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+    }
+    .project-hero .eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: .75rem; }
+    .project-hero h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.2; max-width: 700px; margin-bottom: 1rem; }
+    .project-hero .sub { font-size: 1rem; color: rgba(255,255,255,.7); max-width: 620px; margin-bottom: 1.75rem; }
+    .meta-pills { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .meta-pill { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; padding: .3rem .9rem; font-size: .78rem; color: rgba(255,255,255,.85); }
+    .page-body { max-width: 900px; margin: 0 auto; padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 2rem); display: flex; flex-direction: column; gap: 3rem; }
+    .section-label { text-transform: uppercase; letter-spacing: 2px; font-size: .68rem; font-weight: 700; color: var(--teal); margin-bottom: .4rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+    p { color: var(--muted); font-size: .93rem; margin-bottom: .75rem; }
+    p:last-child { margin-bottom: 0; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.25rem; box-shadow: var(--shadow); text-align: center; }
+    .stat-card .number { font-size: 1.7rem; font-weight: 700; color: var(--navy); line-height: 1.1; }
+    .stat-card .stat-label { font-size: .72rem; color: var(--muted); margin-top: .3rem; line-height: 1.4; }
+    .steps { display: flex; flex-direction: column; gap: 1rem; }
+    .step { display: flex; gap: 1.1rem; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: var(--white); font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .step-body h3 { font-size: .93rem; font-weight: 700; color: var(--navy); margin-bottom: .2rem; }
+    .step-body p { font-size: .87rem; color: var(--muted); margin: 0; }
+    .findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.1rem; }
+    .finding-card { background: var(--white); border-left: 4px solid var(--teal); border-radius: 0 var(--radius) var(--radius) 0; padding: 1.1rem 1.25rem; box-shadow: var(--shadow); }
+    .finding-card.accent-card { border-left-color: var(--accent); }
+    .finding-card h3 { font-size: .85rem; font-weight: 700; color: var(--navy); margin-bottom: .35rem; }
+    .finding-card p { font-size: .83rem; color: var(--muted); margin: 0; }
+    .takeaway { background: var(--navy); border-radius: var(--radius); padding: 2rem 2.25rem; color: var(--white); }
+    .takeaway .q-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: .75rem; }
+    .takeaway blockquote { font-size: 1.1rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.9); border: none; margin: 0; padding: 0; }
+    .arch-diagram {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem;
+      box-shadow: var(--shadow);
+    }
+    .arch-row {
+      display: flex; align-items: center; gap: .75rem;
+      flex-wrap: wrap; margin-bottom: .75rem;
+    }
+    .arch-row:last-child { margin-bottom: 0; }
+    .arch-box {
+      background: var(--navy); color: var(--white);
+      border-radius: 6px; padding: .45rem .9rem;
+      font-size: .8rem; font-weight: 600;
+      white-space: nowrap;
+    }
+    .arch-box.teal { background: var(--teal); }
+    .arch-box.accent { background: var(--accent); color: var(--navy); }
+    .arch-arrow { color: var(--muted); font-size: 1.1rem; }
+    .arch-label { font-size: .75rem; color: var(--muted); width: 100%; margin-top: -.4rem; padding-left: .25rem; }
+    .page-footer { border-top: 1px solid var(--border); padding: 2rem clamp(1.5rem, 5vw, 2rem); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; max-width: 900px; margin: 0 auto; }
+    .page-footer p { font-size: .8rem; color: var(--muted); margin: 0; }
+    .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.25rem; border-radius: 6px; font-size: .875rem; font-weight: 600; text-decoration: none; transition: all .2s; }
+    .btn-primary { background: var(--teal); color: var(--white); }
+    .btn-primary:hover { background: #15687a; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">Nathan Butler</a>
+  <a href="../index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<header class="project-hero">
+  <p class="eyebrow">Data Engineering &nbsp;·&nbsp; Willamette University &nbsp;·&nbsp; 2025</p>
+  <h1>Real-Time Transit Data Pipeline &amp; Anomaly Detection</h1>
+  <p class="sub">
+    Built a production-grade ETL pipeline ingesting live transit station data into
+    PostgreSQL via Apache Airflow, with Grafana dashboards surfacing real-time anomalies
+    for operational monitoring.
+  </p>
+  <div class="meta-pills">
+    <span class="meta-pill">Python</span>
+    <span class="meta-pill">PostgreSQL</span>
+    <span class="meta-pill">Apache Airflow</span>
+    <span class="meta-pill">Grafana</span>
+    <span class="meta-pill">ETL</span>
+    <span class="meta-pill">Real-Time Pipelines</span>
+  </div>
+</header>
+
+<main class="page-body">
+
+  <section>
+    <p class="section-label">The Problem</p>
+    <h2>Why This Pipeline Was Built</h2>
+    <p>
+      Transit systems generate continuous streams of sensor and operational data — station
+      throughput, dwell times, ridership counts — that need to be ingested, stored, and
+      made visible to operators in near real-time. Without a structured pipeline, this data
+      sits in raw feeds that no one can easily monitor or act on.
+    </p>
+    <p>
+      This project built a full data engineering stack from scratch: automated ingestion,
+      a normalized warehouse schema, scheduled orchestration, and live dashboards capable
+      of flagging anomalies as they happen — replicating what a production data team
+      would build for a transit authority.
+    </p>
+  </section>
+
+  <section>
+    <p class="section-label">Architecture</p>
+    <h2>System Overview</h2>
+    <div class="stat-row" style="margin-bottom:1.75rem;">
+      <div class="stat-card">
+        <div class="number">Real-Time</div>
+        <div class="stat-label">Continuous data ingestion via Airflow DAGs</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">PostgreSQL</div>
+        <div class="stat-label">Production-like normalized warehouse</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">Grafana</div>
+        <div class="stat-label">Live monitoring dashboards</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">Airflow</div>
+        <div class="stat-label">DAG-based pipeline orchestration</div>
+      </div>
+    </div>
+
+    <div class="arch-diagram">
+      <p style="font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--teal); margin-bottom:1.1rem;">Data Flow</p>
+      <div class="arch-row">
+        <div class="arch-box">Transit Data Source</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box teal">Python Ingestion Script</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box teal">Airflow DAG (Scheduled)</div>
+        <div class="arch-label">Raw feed pulled and validated on a schedule</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box teal">Airflow DAG</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box">PostgreSQL Warehouse</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box accent">Grafana Dashboard</div>
+        <div class="arch-label">Cleaned data loaded to warehouse, surfaced for monitoring</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Methods</p>
+    <h2>What Was Built</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>ETL Pipeline Design</h3>
+          <p>Designed extract-transform-load workflows in Python to pull raw transit station records, validate schema and data types, handle missing values, and write cleaned records to a structured PostgreSQL schema.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Apache Airflow Orchestration</h3>
+          <p>Built Directed Acyclic Graphs (DAGs) in Airflow to schedule and monitor pipeline runs, handle retries on failure, and maintain a dependency graph ensuring data arrives in the correct order.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>PostgreSQL Warehouse Schema</h3>
+          <p>Engineered a normalized relational schema to store ingested transit data efficiently — designed to support both real-time queries for the dashboard and historical analysis over the full dataset.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Anomaly Detection Logic</h3>
+          <p>Implemented threshold-based and statistical anomaly flags in SQL — identifying stations with unusually high or low activity relative to their historical baseline during the same time window.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Grafana Dashboard</h3>
+          <p>Connected Grafana to the PostgreSQL warehouse and built live panels showing station-level metrics, anomaly alerts, and trend lines — giving operators a single pane of glass for system health.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Outcomes</p>
+    <h2>What the System Delivers</h2>
+    <div class="findings-grid">
+      <div class="finding-card accent-card">
+        <h3>End-to-end automation</h3>
+        <p>Data flows from raw source to live dashboard without manual intervention — Airflow handles scheduling, retries, and logging throughout.</p>
+      </div>
+      <div class="finding-card accent-card">
+        <h3>Real-time anomaly visibility</h3>
+        <p>Operators can see flagged stations within minutes of an anomaly occurring, rather than discovering issues in after-the-fact batch reports.</p>
+      </div>
+      <div class="finding-card">
+        <h3>Production-like architecture</h3>
+        <p>The stack mirrors what a real transit authority data team would deploy — PostgreSQL warehouse, orchestrated ETL, and a monitoring layer — built as a full working system, not a prototype.</p>
+      </div>
+      <div class="finding-card">
+        <h3>Maintainable and extensible</h3>
+        <p>DAG-based design makes it straightforward to add new data sources, adjust scheduling, or extend the anomaly detection logic without restructuring the whole pipeline.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="takeaway">
+      <p class="q-label">Takeaway</p>
+      <blockquote>
+        This project demonstrates the full data engineering lifecycle — from raw ingestion
+        through orchestration, storage, and live monitoring. Building it end-to-end, rather
+        than in isolated components, gave hands-on experience with the operational realities
+        of production pipelines: handling failures, designing for latency, and making data
+        immediately actionable for non-technical stakeholders.
+      </blockquote>
+    </div>
+  </section>
+
+</main>
+
+<div class="page-footer">
+  <p>Nathan Butler &nbsp;·&nbsp; Advanced Data Engineering, Willamette University, 2025</p>
+  <a href="../index.html#projects" class="btn btn-primary">← All Projects</a>
+</div>
+
+</body>
+</html>
