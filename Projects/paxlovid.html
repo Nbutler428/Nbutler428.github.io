@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paxlovid &amp; Dysgeusia – Nathan Butler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0f2444; --teal: #1a7a8a; --teal-light: #d0eef2;
+      --accent: #e8a838; --text: #1e2a38; --muted: #5a6a7a;
+      --bg: #f8fafc; --white: #ffffff; --border: #dde4ed;
+      --radius: 12px; --shadow: 0 4px 24px rgba(15,36,68,.10);
+    }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); line-height: 1.65; }
+    nav {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem); height: 60px;
+    }
+    .nav-brand { font-weight: 700; font-size: 1rem; color: var(--navy); text-decoration: none; }
+    .nav-back { font-size: .875rem; font-weight: 500; color: var(--teal); text-decoration: none; }
+    .nav-back:hover { text-decoration: underline; }
+    .project-hero {
+      background: linear-gradient(135deg, #0d3326 0%, #1a5c40 100%);
+      color: var(--white);
+      padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+    }
+    .project-hero .eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: .75rem; }
+    .project-hero h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.2; max-width: 700px; margin-bottom: 1rem; }
+    .project-hero .sub { font-size: 1rem; color: rgba(255,255,255,.7); max-width: 620px; margin-bottom: 1.75rem; }
+    .meta-pills { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .meta-pill { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; padding: .3rem .9rem; font-size: .78rem; color: rgba(255,255,255,.85); }
+    .page-body { max-width: 900px; margin: 0 auto; padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 2rem); display: flex; flex-direction: column; gap: 3rem; }
+    .section-label { text-transform: uppercase; letter-spacing: 2px; font-size: .68rem; font-weight: 700; color: var(--teal); margin-bottom: .4rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+    p { color: var(--muted); font-size: .93rem; margin-bottom: .75rem; }
+    p:last-child { margin-bottom: 0; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.25rem; box-shadow: var(--shadow); text-align: center; }
+    .stat-card .number { font-size: 1.7rem; font-weight: 700; color: var(--navy); line-height: 1.1; }
+    .stat-card .stat-label { font-size: .72rem; color: var(--muted); margin-top: .3rem; line-height: 1.4; }
+    .steps { display: flex; flex-direction: column; gap: 1rem; }
+    .step { display: flex; gap: 1.1rem; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: var(--white); font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .step-body h3 { font-size: .93rem; font-weight: 700; color: var(--navy); margin-bottom: .2rem; }
+    .step-body p { font-size: .87rem; color: var(--muted); margin: 0; }
+    .findings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.1rem; }
+    .finding-card { background: var(--white); border-left: 4px solid var(--teal); border-radius: 0 var(--radius) var(--radius) 0; padding: 1.1rem 1.25rem; box-shadow: var(--shadow); }
+    .finding-card.accent-card { border-left-color: var(--accent); }
+    .finding-card h3 { font-size: .85rem; font-weight: 700; color: var(--navy); margin-bottom: .35rem; }
+    .finding-card p { font-size: .83rem; color: var(--muted); margin: 0; }
+    .takeaway { background: var(--navy); border-radius: var(--radius); padding: 2rem 2.25rem; color: var(--white); }
+    .takeaway .q-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: .75rem; }
+    .takeaway blockquote { font-size: 1.1rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.9); border: none; margin: 0; padding: 0; }
+    .img-block { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .img-block img { width: 100%; display: block; }
+    .img-caption { font-size: .78rem; color: var(--muted); padding: .75rem 1rem; border-top: 1px solid var(--border); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+    .info-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); }
+    .info-card h3 { font-size: .82rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); font-weight: 700; margin-bottom: .6rem; }
+    .info-card p { font-size: .87rem; margin: 0; }
+    .page-footer { border-top: 1px solid var(--border); padding: 2rem clamp(1.5rem, 5vw, 2rem); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; max-width: 900px; margin: 0 auto; }
+    .page-footer p { font-size: .8rem; color: var(--muted); margin: 0; }
+    .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.25rem; border-radius: 6px; font-size: .875rem; font-weight: 600; text-decoration: none; transition: all .2s; }
+    .btn-primary { background: var(--teal); color: var(--white); }
+    .btn-primary:hover { background: #15687a; }
+    .btn-outline { border: 2px solid var(--border); color: var(--muted); }
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">Nathan Butler</a>
+  <a href="../index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<header class="project-hero">
+  <p class="eyebrow">Clinical Research Internship &nbsp;·&nbsp; Monell Chemical Senses Center &nbsp;·&nbsp; 2022</p>
+  <h1>Paxlovid &amp; Dysgeusia: Investigating Taste Disturbances from COVID-19 Treatment</h1>
+  <p class="sub">
+    Designed and conducted sensory testing to isolate which component of Paxlovid
+    (Nirmatrelvir vs. Ritonavir) causes taste distortion, and linked findings to
+    known bitter taste receptor biology.
+  </p>
+  <div class="meta-pills">
+    <span class="meta-pill">R</span>
+    <span class="meta-pill">Clinical Trial Design</span>
+    <span class="meta-pill">Sensory Testing</span>
+    <span class="meta-pill">Statistical Analysis</span>
+    <span class="meta-pill">R Markdown</span>
+  </div>
+</header>
+
+<main class="page-body">
+
+  <section>
+    <p class="section-label">Background</p>
+    <h2>What Is Dysgeusia and Why Does It Matter?</h2>
+    <p>
+      Paxlovid (Nirmatrelvir + Ritonavir) is a widely prescribed oral antiviral treatment for COVID-19.
+      A commonly reported side effect is <strong>dysgeusia</strong> — a persistent, often metallic or
+      bitter distortion of taste that can make eating unpleasant and reduce patient adherence to the
+      full treatment course.
+    </p>
+    <p>
+      Despite how frequently this side effect is reported, the specific mechanism and which component
+      of the drug causes it were not well characterized. This internship project at the
+      <strong>Monell Chemical Senses Center</strong> — the world's leading independent institute
+      for taste and smell research — aimed to fill that gap.
+    </p>
+  </section>
+
+  <section>
+    <p class="section-label">The Study</p>
+    <h2>Design &amp; Scale</h2>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="number">2</div>
+        <div class="stat-label">Drug components tested (Nirmatrelvir, Ritonavir)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">3</div>
+        <div class="stat-label">Solution conditions (each component + combination)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">5%</div>
+        <div class="stat-label">Ethanol solvent used for consistent dissolution</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">TAS2R7</div>
+        <div class="stat-label">Key bitter taste receptor implicated</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Methods</p>
+    <h2>How the Study Worked</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Solution Preparation</h3>
+          <p>Prepared taste solutions of Nirmatrelvir alone, Ritonavir alone, and a combination — dissolved in 5% ethanol to ensure consistent bioavailability and taste delivery across all conditions.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Controlled Taste-Intensity Testing</h3>
+          <p>Participants rated the perceived taste intensity of each solution on a standardized scale. Tests were conducted under blinded conditions to prevent expectation bias.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Order Counterbalancing</h3>
+          <p>Presentation order of the three solutions was varied across participants to eliminate carry-over and ordering effects. Statistical tests confirmed no significant order effect was present.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Group-Level &amp; Individual-Level Analysis</h3>
+          <p>Analyzed both mean intensity ratings across conditions and individual-level variation to characterize the distribution of taste sensitivity and identify outlier responders.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Receptor Biology Review</h3>
+          <p>Linked experimental findings to the known pharmacology of bitter taste receptors, particularly TAS2R7, to explain the molecular basis for observed taste disturbances.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Results</p>
+    <h2>What We Found</h2>
+    <div class="findings-grid">
+      <div class="finding-card accent-card">
+        <h3>Nirmatrelvir is the primary driver</h3>
+        <p>Nirmatrelvir alone and the combination solution produced significantly higher average taste intensity than Ritonavir alone — identifying the main culprit in Paxlovid dysgeusia.</p>
+      </div>
+      <div class="finding-card">
+        <h3>No ordering bias detected</h3>
+        <p>Statistical testing showed no significant correlation between the order solutions were presented and the intensity ratings — confirming the counterbalancing design worked.</p>
+      </div>
+      <div class="finding-card">
+        <h3>TAS2R7 receptor implicated</h3>
+        <p>The pattern of intensity responses is consistent with activation of TAS2R7, a bitter taste receptor known to respond to protease inhibitor compounds.</p>
+      </div>
+      <div class="finding-card">
+        <h3>Reproducible across participants</h3>
+        <p>Individual-level data showed consistent direction of effect — the higher intensity of Nirmatrelvir solutions held across participants despite variation in absolute sensitivity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Output</p>
+    <h2>Deliverables</h2>
+    <div class="two-col">
+      <div class="info-card">
+        <h3>Research Poster</h3>
+        <p>Findings were compiled into a scientific poster presented at the Monell Chemical Senses Center, summarizing design, results, and the receptor biology explanation.</p>
+      </div>
+      <div class="info-card">
+        <h3>Trial Database</h3>
+        <p>Built and maintained a structured database of trial results to support ongoing analysis and future research building on this study's participant data.</p>
+      </div>
+    </div>
+    <div class="img-block" style="margin-top: 1.25rem;">
+      <img src="../assets/images/paxlovid dygesia poster image.png" alt="Paxlovid Dysgeusia Research Poster" />
+      <p class="img-caption">Research poster summarizing the study design, sensory testing results, and receptor biology findings.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="takeaway">
+      <p class="q-label">Takeaway</p>
+      <blockquote>
+        By isolating Nirmatrelvir as the primary driver of Paxlovid dysgeusia and linking the
+        finding to TAS2R7 bitter taste receptor activation, this study provides a mechanistic
+        explanation for a commonly reported but poorly understood side effect — with implications
+        for future formulation design and patient counseling around COVID-19 treatment adherence.
+      </blockquote>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Resources</p>
+    <h2>Code &amp; Files</h2>
+    <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
+      <a href="https://github.com/Nbutler428/Nbutler428.github.io/blob/main/Projects/PaxlovidProject/final-paxlovid.rmd" class="btn btn-outline" target="_blank">View R Markdown Code →</a>
+    </div>
+  </section>
+
+</main>
+
+<div class="page-footer">
+  <p>Nathan Butler &nbsp;·&nbsp; Monell Chemical Senses Center Internship, Summer 2022</p>
+  <a href="../index.html#projects" class="btn btn-primary">← All Projects</a>
+</div>
+
+</body>
+</html>
