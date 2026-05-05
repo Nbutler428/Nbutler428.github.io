@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocean Shipping &amp; Nitrate – Nathan Butler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0f2444;
+      --teal:   #1a7a8a;
+      --teal-light: #d0eef2;
+      --accent: #e8a838;
+      --text:   #1e2a38;
+      --muted:  #5a6a7a;
+      --bg:     #f8fafc;
+      --white:  #ffffff;
+      --border: #dde4ed;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(15,36,68,.10);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 60px;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 1rem;
+      color: var(--navy); text-decoration: none;
+    }
+    .nav-back {
+      font-size: .875rem; font-weight: 500;
+      color: var(--teal); text-decoration: none;
+      display: flex; align-items: center; gap: .35rem;
+    }
+    .nav-back:hover { text-decoration: underline; }
+
+    /* HERO BANNER */
+    .project-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #0e3a55 100%);
+      color: var(--white);
+      padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+    }
+    .project-hero .eyebrow {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .75rem;
+    }
+    .project-hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 700; line-height: 1.2;
+      max-width: 700px; margin-bottom: 1rem;
+    }
+    .project-hero .sub {
+      font-size: 1rem; color: rgba(255,255,255,.7);
+      max-width: 620px; margin-bottom: 1.75rem;
+    }
+    .meta-pills { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .meta-pill {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px; padding: .3rem .9rem;
+      font-size: .78rem; color: rgba(255,255,255,.85);
+    }
+
+    /* LAYOUT */
+    .page-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 2rem);
+      display: flex; flex-direction: column; gap: 3rem;
+    }
+
+    /* SECTION */
+    .section-label {
+      text-transform: uppercase; letter-spacing: 2px;
+      font-size: .68rem; font-weight: 700; color: var(--teal);
+      margin-bottom: .4rem;
+    }
+    h2 {
+      font-size: 1.25rem; font-weight: 700;
+      color: var(--navy); margin-bottom: 1rem;
+    }
+    p { color: var(--muted); font-size: .93rem; margin-bottom: .75rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* STAT CARDS */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.25rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .stat-card .number {
+      font-size: 1.7rem; font-weight: 700;
+      color: var(--navy); line-height: 1.1;
+    }
+    .stat-card .stat-label {
+      font-size: .72rem; color: var(--muted);
+      margin-top: .3rem; line-height: 1.4;
+    }
+
+    /* DATA SOURCES TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    .data-table th {
+      text-align: left; padding: .6rem .9rem;
+      background: var(--navy); color: var(--white);
+      font-weight: 600; font-size: .78rem;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .data-table th:first-child { border-radius: 8px 0 0 0; }
+    .data-table th:last-child  { border-radius: 0 8px 0 0; }
+    .data-table td {
+      padding: .65rem .9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--muted);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: var(--bg); }
+    .data-table .source-name { font-weight: 600; color: var(--text); }
+
+    /* METHODS STEPS */
+    .steps { display: flex; flex-direction: column; gap: 1rem; }
+    .step {
+      display: flex; gap: 1.1rem; align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--navy); color: var(--white);
+      font-size: .8rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-body h3 { font-size: .93rem; font-weight: 700; color: var(--navy); margin-bottom: .2rem; }
+    .step-body p  { font-size: .87rem; color: var(--muted); margin: 0; }
+
+    /* FINDINGS */
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.1rem;
+    }
+    .finding-card {
+      background: var(--white);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow);
+    }
+    .finding-card.accent-card { border-left-color: var(--accent); }
+    .finding-card h3 { font-size: .85rem; font-weight: 700; color: var(--navy); margin-bottom: .35rem; }
+    .finding-card p  { font-size: .83rem; color: var(--muted); margin: 0; }
+
+    /* QUOTE / TAKEAWAY */
+    .takeaway {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 2rem 2.25rem;
+      color: var(--white);
+    }
+    .takeaway .q-label {
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: var(--accent); margin-bottom: .75rem;
+    }
+    .takeaway blockquote {
+      font-size: 1.1rem; font-weight: 300;
+      line-height: 1.7; color: rgba(255,255,255,.9);
+      border: none; margin: 0; padding: 0;
+    }
+
+    /* FOOTER */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem clamp(1.5rem, 5vw, 2rem);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      max-width: 900px; margin: 0 auto;
+    }
+    .page-footer p { font-size: .8rem; color: var(--muted); margin: 0; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .55rem 1.25rem; border-radius: 6px;
+      font-size: .875rem; font-weight: 600;
+      text-decoration: none; transition: all .2s;
+    }
+    .btn-primary { background: var(--teal); color: var(--white); }
+    .btn-primary:hover { background: #15687a; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="../index.html" class="nav-brand">Nathan Butler</a>
+  <a href="../index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<!-- HERO -->
+<header class="project-hero">
+  <p class="eyebrow">Capstone Project &nbsp;·&nbsp; Data 599 &nbsp;·&nbsp; 2025</p>
+  <h1>Does International Shipping Affect Ocean Nitrate &amp; Phytoplankton?</h1>
+  <p class="sub">
+    A multi-method analysis of shipping lane proximity, nitrate concentrations,
+    and chlorophyll-a levels across the North Atlantic.
+  </p>
+  <div class="meta-pills">
+    <span class="meta-pill">Python</span>
+    <span class="meta-pill">K-Means Clustering</span>
+    <span class="meta-pill">OLS Regression</span>
+    <span class="meta-pill">Random Forest</span>
+    <span class="meta-pill">Spatial Block CV</span>
+    <span class="meta-pill">ERDDAP / NOAA API</span>
+  </div>
+</header>
+
+<main class="page-body">
+
+  <!-- QUESTION -->
+  <section>
+    <p class="section-label">The Question</p>
+    <h2>Research Motivation</h2>
+    <p>
+      International shipping is a major source of nitrogen oxide (NO<sub>x</sub>) emissions.
+      When these compounds dissolve into seawater they can act as fertilizers, potentially
+      elevating nitrate concentrations and stimulating phytoplankton growth — or, in already
+      nutrient-rich areas, exacerbating hypoxia. Despite the scale of global shipping, this
+      chemical footprint on ocean biology is poorly quantified.
+    </p>
+    <p>
+      This project asks: <strong>Are areas with higher shipping density measurably different
+      in their nitrate and chlorophyll-a concentrations, after controlling for geography,
+      season, and sea surface temperature?</strong>
+    </p>
+  </section>
+
+  <!-- DATASET STATS -->
+  <section>
+    <p class="section-label">The Data</p>
+    <h2>Scale &amp; Sources</h2>
+    <div class="stat-row" style="margin-bottom: 1.75rem;">
+      <div class="stat-card">
+        <div class="number">29,913</div>
+        <div class="stat-label">Unique ocean stations (lat/lon/date)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">4</div>
+        <div class="stat-label">Integrated data sources</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">1990–2024</div>
+        <div class="stat-label">Temporal range of observations</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">10</div>
+        <div class="stat-label">Longhurst ocean provinces covered</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Variable</th>
+          <th>Resolution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="source-name">NOAA World Ocean Database</span></td>
+          <td>Nitrate concentration (mmol/m³), depth-averaged</td>
+          <td>Point observations</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">NASA MODIS Aqua (OceanColor)</span></td>
+          <td>Chlorophyll-a (mg/m³) — phytoplankton proxy</td>
+          <td>9 km monthly</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">World Bank Shipping Density</span></td>
+          <td>Vessel traffic density (AIS-derived)</td>
+          <td>~500 m raster</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">NOAA OISST v2.1 (via ERDDAP)</span></td>
+          <td>Sea surface temperature (°C) — new control variable</td>
+          <td>0.25° monthly</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- METHODS -->
+  <section>
+    <p class="section-label">Methods</p>
+    <h2>Analytical Pipeline</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Data Cleaning &amp; Feature Engineering</h3>
+          <p>Removed physically implausible values (nitrate &gt;60 mmol/m³), aggregated 6.8M depth-level rows to 29,913 unique stations, and added log-transformed features and cyclical month encoding (sin/cos) for seasonal patterns.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Longhurst Province Assignment</h3>
+          <p>Each station was assigned to an oceanographic biogeochemical province (e.g., North Atlantic Drift, Canary Current Upwelling, NE Atlantic Shelf) to capture ecological context without leaking raw geography into the models.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>SST Integration via NOAA ERDDAP API</h3>
+          <p>Downloaded 276 months of OISST data (2002–2024) and joined to observations at 1-degree spatial resolution — a key fix that raised the match rate from 12% to 52%.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>K-Means Clustering with Triple Validation</h3>
+          <p>Chose the optimal k via majority vote across elbow (inertia), silhouette score, and Davies-Bouldin index. Data supported k=2: coastal shelf vs. open ocean — an ecologically meaningful divide.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Province-Stratified OLS Regression</h3>
+          <p>Ran separate regressions per province with HC3 robust standard errors, controlling for distance-to-coast, season, and SST. Computed partial R² for shipping to isolate its unique contribution.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>Random Forest with Spatial Block Cross-Validation</h3>
+          <p>Used 5°×5° geographic blocks as CV folds — holding out entire regions rather than random rows — to prevent spatial autocorrelation from inflating R². Reported permutation importance on held-out blocks only.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDINGS -->
+  <section>
+    <p class="section-label">Results</p>
+    <h2>Key Findings</h2>
+    <div class="findings-grid">
+      <div class="finding-card">
+        <h3>Shipping signal is real but small</h3>
+        <p>Shipping density has a statistically significant association with nitrate in most provinces (p &lt; 0.001), but its partial R² is only 3–6% — far below geography and season.</p>
+      </div>
+      <div class="finding-card">
+        <h3>Direction varies by province</h3>
+        <p>NE Atlantic Shelf: positive association (beta = +0.023). Subarctic Atlantic: negative association (beta = -0.023). No one-size-fits-all relationship.</p>
+      </div>
+      <div class="finding-card">
+        <h3>Nitrate model generalizes (R² = 0.32)</h3>
+        <p>Spatial block CV R² of 0.32 for nitrate confirms the model learned something real — not memorized geography. An honest benchmark for this kind of spatial holdout.</p>
+      </div>
+      <div class="finding-card accent-card">
+        <h3>Geography dominates</h3>
+        <p>Random forest permutation importance shows distance-to-coast, province, and season consistently outrank shipping density. Shipping is a secondary — not primary — predictor.</p>
+      </div>
+      <div class="finding-card accent-card">
+        <h3>Chlorophyll-a harder to predict</h3>
+        <p>Strong regional character means the chlor-a model fails to generalize across geographic blocks (some folds: R² &lt; -90), a sign that spatial autocorrelation dominates the signal.</p>
+      </div>
+      <div class="finding-card">
+        <h3>Non-linear effects present</h3>
+        <p>Partial dependence plots show a threshold effect in the Iberian coastal zone — the shipping-nitrate relationship only strengthens at the highest traffic densities.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAKEAWAY -->
+  <section>
+    <div class="takeaway">
+      <p class="q-label">Takeaway</p>
+      <blockquote>
+        International shipping has a detectable but modest association with ocean nitrate levels —
+        present in most North Atlantic provinces, statistically significant, but explaining only a
+        few percent of variance beyond geography and season. The ocean's chemistry is driven
+        primarily by circulation, upwelling, and latitude. Shipping is a real second-order signal,
+        not the dominant force — and its direction depends heavily on local ecological context.
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- LIMITATIONS -->
+  <section>
+    <p class="section-label">Limitations &amp; Future Work</p>
+    <h2>What We'd Do Next</h2>
+    <p>
+      The shipping density data is a static raster aggregated across years, while nitrate
+      measurements are point-in-time — this temporal mismatch likely suppresses detectable effects.
+      Dynamic AIS vessel tracking data matched to nitrate observations by date would be a major
+      improvement.
+    </p>
+    <p>
+      Ocean currents and atmospheric deposition of nitrogen are major nitrate pathways not
+      captured here. Incorporating reanalysis products (e.g., HYCOM current fields, MERRA-2
+      atmospheric NO<sub>x</sub> deposition) would help separate the shipping footprint from
+      background oceanographic forcing.
+    </p>
+    <p>
+      Future work could leverage satellite-derived NO<sub>2</sub> columns (Sentinel-5P TROPOMI)
+      directly above shipping lanes as a more direct measure of atmospheric nitrogen loading to
+      the surface ocean.
+    </p>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <p>Nathan Butler &nbsp;·&nbsp; Data Science Capstone, Willamette University, 2025</p>
+  <a href="../index.html#projects" class="btn btn-primary">← All Projects</a>
+</div>
+
+</body>
+</html>
